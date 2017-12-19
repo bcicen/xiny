@@ -3,6 +3,10 @@ package main
 import (
 	"fmt"
 	"math"
+	"os"
+	"regexp"
+	"strconv"
+	"strings"
 )
 
 type Magnitude struct {
@@ -31,6 +35,11 @@ var (
 	atto  = Magnitude{"a", "atto", -18.0}
 )
 
+type Unit interface {
+	Name() string
+	Symbol() string
+}
+
 type Value struct {
 	v    float64
 	mag  Magnitude
@@ -48,23 +57,22 @@ func (v *Value) ToMagnitude(newMag Magnitude) {
 	v.mag = newMag
 }
 
-func main() {
-	val := &Value{1.0, none, "gram"}
-	fmt.Println(val)
+var re = regexp.MustCompile("^([0-9.]+)(\\w+) in (\\w+)")
 
-	list := []Magnitude{deci, centi, micro, nano, pico, femto, atto, none, deca, hecto, kilo, mega, giga, tera, peta, exa, atto, none}
-	for _, m := range list {
-		val.ToMagnitude(m)
-		fmt.Println(val)
+func parse(s string) (float64, string, string) {
+	fmt.Println(s)
+	mg := re.FindStringSubmatch(s)
+	if len(mg) != 4 {
+		panic(fmt.Errorf("parse error"))
 	}
-	//val.ToMagnitude(kilo)
-	//fmt.Println(val)
-	//val.ToMagnitude(none)
-	//fmt.Println(val)
-	//val.ToMagnitude(milli)
-	//fmt.Println(val)
-	//val.ToMagnitude(mega)
-	//fmt.Println(val)
-	//val.ToMagnitude(none)
-	//fmt.Println(val)
+	q, err := strconv.ParseFloat(mg[1], 6)
+	if err != nil {
+		panic(fmt.Errorf("parse error"))
+	}
+	return q, mg[2], mg[3]
+}
+
+func main() {
+	q, u1, u2 := parse(strings.Join(os.Args[1:], " "))
+	fmt.Printf("%g %s -> %s", q, u1, u2)
 }
