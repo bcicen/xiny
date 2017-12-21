@@ -1,11 +1,13 @@
 package units
 
-type Quantity struct {
-	Name string
-}
+import (
+	"fmt"
+)
 
-// reference unit for conversion ratio
-func (q Quantity) RefUnit() Unit { return baseUnits[q.Name] }
+var (
+	All        = []Unit{}
+	Quantities = map[string]Quantity{}
+)
 
 type Unit struct {
 	Name     string
@@ -14,22 +16,43 @@ type Unit struct {
 	Ratio    float64 // ratio of one unit to quantity reference unit
 }
 
-var (
-	Time        = Quantity{"time"}
-	Length      = Quantity{"length"}
-	Mass        = Quantity{"mass"}
-	Temperature = Quantity{"temperature"}
-	Frequency   = Quantity{"frequency"}
-	Energy      = Quantity{"energy"}
-	Power       = Quantity{"power"}
-)
-
-var baseUnits = map[string]Unit{
-	"time":        Unit{"second", "s", Time, 1.0},
-	"length":      Unit{"meter", "m", Length, 1.0},
-	"mass":        Unit{"gram", "g", Mass, 1.0},
-	"temperature": Unit{"celsius", "c", Temperature, 1.0},
-	"frequency":   Unit{"hertz", "hz", Frequency, 1.0},
-	"energy":      Unit{"joule", "j", Energy, 1.0},
-	"power":       Unit{"watt", "w", Power, 1.0},
+func New(name, symbol string, quantity Quantity, ratio float64) {
+	u := Unit{name, symbol, quantity, ratio}
+	All = append(All, u)
 }
+
+// return unit matching name or symbol provided
+func Find(s string) (Unit, error) {
+	for _, u := range All {
+		if u.Name == s || u.Symbol == s {
+			return u, nil
+		}
+	}
+	return Unit{}, fmt.Errorf("unit not found")
+}
+
+type Quantity struct {
+	Name    string
+	RefName string // name of reference unit
+}
+
+func NewQuantity(name, refunit string) Quantity {
+	if _, ok := Quantities[name]; !ok {
+		Quantities[name] = Quantity{name, refunit}
+	}
+	return Quantities[name]
+}
+
+// reference unit for conversion ratio
+func (q Quantity) RefUnit() (Unit, error) {
+	return Find(q.RefName)
+}
+
+//var (
+//Time        = Quantity{"time", "second"}
+//Length      = Quantity{"length", "meter"}
+//Temperature = Quantity{"temperature", "celsius"}
+//Frequency   = Quantity{"frequency", "hertz"}
+//Energy      = Quantity{"energy", "joule"}
+//Power       = Quantity{"power", "watt"}
+//)

@@ -5,14 +5,15 @@ import (
 	"math"
 )
 
-func makeMagnitudeUnits(name, symbol string, quantity Quantity) (units []Unit) {
+// register individual units for all metric magnitudes, given a
+// base name and symbol
+func NewMagnitudeUnits(name, symbol string, quantity Quantity) {
 	for _, mag := range Magnitudes {
 		ratio := 1.0 * math.Pow(10.0, mag.Power)
 		name := fmt.Sprintf("%s%s", mag.Prefix, name)
 		symbol := fmt.Sprintf("%s%s", mag.Symbol, symbol)
-		units = append(units, Unit{name, symbol, quantity, ratio})
+		New(name, symbol, quantity, ratio)
 	}
-	return units
 }
 
 type magnitude struct {
@@ -30,7 +31,7 @@ var Magnitudes = []magnitude{
 	{"k", "kilo", 3.0},
 	{"h", "hecto", 2.0},
 	{"da", "deca", 1.0},
-	//{"", "", 0.0},
+	{"", "", 0.0},
 	{"d", "deci", -1.0},
 	{"c", "centi", -2.0},
 	{"m", "milli", -3.0},

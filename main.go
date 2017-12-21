@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/bcicen/xiny/units"
+	_ "github.com/bcicen/xiny/units/mass"
 )
 
 var re = regexp.MustCompile("^([0-9.]+)(\\w+) in (\\w+)")
@@ -32,4 +33,10 @@ func main() {
 	for _, mu := range units.All {
 		fmt.Printf("%s %s %.6g\n", mu.Name, mu.Symbol, mu.Ratio)
 	}
+
+	u, err := units.Find(u1)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(u)
 }
