@@ -30,13 +30,25 @@ func main() {
 	q, u1, u2 := parse(strings.Join(os.Args[1:], " "))
 	fmt.Printf("%g %s -> %s\n", q, u1, u2)
 
-	for _, mu := range units.All {
-		fmt.Printf("%s %s %.6g\n", mu.Name, mu.Symbol, mu.Ratio)
-	}
+	//for _, mu := range units.All {
+	//fmt.Printf("%s %s %.6g\n", mu.Name, mu.Symbol, mu.Ratio)
+	//}
 
-	u, err := units.Find(u1)
+	fromUnit, err := units.Find(u1)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(u)
+
+	toUnit, err := units.Find(u2)
+	if err != nil {
+		panic(err)
+	}
+
+	val := units.NewValue(q, fromUnit)
+	fmt.Println(val.String())
+	fmt.Println(val.LongString())
+
+	val.ToUnit(toUnit)
+	fmt.Println(val.String())
+	fmt.Println(val.LongString())
 }

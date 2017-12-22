@@ -4,10 +4,7 @@ import (
 	"fmt"
 )
 
-var (
-	All        = []Unit{}
-	Quantities = map[string]Quantity{}
-)
+var All = []Unit{}
 
 type Unit struct {
 	Name     string
@@ -29,23 +26,6 @@ func Find(s string) (Unit, error) {
 		}
 	}
 	return Unit{}, fmt.Errorf("unit not found")
-}
-
-type Quantity struct {
-	Name    string
-	RefName string // name of reference unit
-}
-
-func NewQuantity(name, refunit string) Quantity {
-	if _, ok := Quantities[name]; !ok {
-		Quantities[name] = Quantity{name, refunit}
-	}
-	return Quantities[name]
-}
-
-// reference unit for conversion ratio
-func (q Quantity) RefUnit() (Unit, error) {
-	return Find(q.RefName)
 }
 
 //var (
