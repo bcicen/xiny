@@ -46,9 +46,9 @@ func main() {
 
 	val := units.NewValue(q, fromUnit)
 	fmt.Println(val.String())
-	fmt.Println(val.LongString())
+	fmt.Println(val.FString(true))
 
 	val.ToUnit(toUnit)
 	fmt.Println(val.String())
-	fmt.Println(val.LongString())
+	fmt.Println(val.FString(true))
 }
