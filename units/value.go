@@ -2,6 +2,7 @@ package units
 
 import (
 	"fmt"
+	"strconv"
 )
 
 type Value struct {
@@ -11,9 +12,9 @@ type Value struct {
 
 func NewValue(val float64, unit Unit) *Value { return &Value{val, unit} }
 
-func (v *Value) String() string { return v.FString(false) }
+func (v *Value) String() string { return v.FString(false, 3) }
 
-func (v *Value) FString(long bool) string {
+func (v *Value) FString(long bool, precision int) string {
 	label := v.unit.Symbol
 	if long {
 		label = v.unit.Name
@@ -23,7 +24,9 @@ func (v *Value) FString(long bool) string {
 		label = fmt.Sprintf("%ss", label)
 	}
 
-	return fmt.Sprintf("%.6g %s", v.val, label)
+	vstr := strconv.FormatFloat(v.val, 'f', precision, 64)
+
+	return fmt.Sprintf("%s %s", vstr, label)
 }
 
 func (v *Value) ToUnit(u Unit) {
