@@ -8,7 +8,8 @@ import (
 	"strings"
 
 	"github.com/bcicen/xiny/units"
-	_ "github.com/bcicen/xiny/units/mass"
+	//_ "github.com/bcicen/xiny/units/mass"
+	_ "github.com/bcicen/xiny/units/temp"
 )
 
 var re = regexp.MustCompile("^([0-9.]+)(\\w+) in (\\w+)")
@@ -28,27 +29,18 @@ func parse(s string) (float64, string, string) {
 
 func main() {
 	q, u1, u2 := parse(strings.Join(os.Args[1:], " "))
-	fmt.Printf("%g %s -> %s\n", q, u1, u2)
 
-	//for _, mu := range units.All {
-	//fmt.Printf("%s %s %.6g\n", mu.Name, mu.Symbol, mu.Ratio)
-	//}
-
-	fromUnit, err := units.Find(u1)
+	fromQ, fromUnit, err := units.Find(u1)
 	if err != nil {
 		panic(err)
 	}
 
-	toUnit, err := units.Find(u2)
+	_, toUnit, err := units.Find(u2)
 	if err != nil {
 		panic(err)
 	}
 
-	val := units.NewValue(q, fromUnit)
-	fmt.Println(val.String())
-	fmt.Println(val.FString(true, 6))
-
-	val.ToUnit(toUnit)
-	fmt.Println(val.String())
-	fmt.Println(val.FString(true, 6))
+	fn := fromQ.Conv(fromUnit, toUnit)
+	val := fn(q)
+	fmt.Println(val)
 }
