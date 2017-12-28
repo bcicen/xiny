@@ -14,14 +14,18 @@ type Conversion struct {
 }
 
 type Quantity struct {
-	Name  string
-	Units []Unit
-	conv  []Conversion
+	Name      string
+	Units     []Unit
+	Formatter ValueFormatter
+	conv      []Conversion
 }
 
-func NewQuantity(name string) *Quantity {
+func NewQuantity(name string, formatter ValueFormatter) *Quantity {
 	if _, ok := All[name]; !ok {
-		All[name] = &Quantity{Name: name}
+		All[name] = &Quantity{
+			Name:      name,
+			Formatter: formatter,
+		}
 	}
 	fmt.Printf("added new quantity %s\n", name)
 	return All[name]
@@ -66,13 +70,16 @@ func (q *Quantity) NewConv(from, to Unit, formula string) {
 	q.conv = append(q.conv, Conversion{from, to, fn})
 }
 
+func (q *Quantity) FmtValue(v Value, opts FmtOptions) string { return q.Formatter(v, opts) }
+
 // Convert provided value from one unit to another
-func (q *Quantity) Convert(val float64, from, to Unit) (newVal float64, err error) {
-	fn, err := q.lookup(from, to)
+func (q *Quantity) Convert(v Value, to Unit) (newVal Value, err error) {
+	fn, err := q.lookup(v.Unit, to)
 	if err != nil {
 		return newVal, err
 	}
-	return fn(val), nil
+
+	return Value{fn(v.Val), to}, nil
 }
 
 // find conversion function between two units

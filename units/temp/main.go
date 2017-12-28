@@ -1,12 +1,25 @@
 package temp
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/bcicen/xiny/units"
 )
 
 var (
-	Temp = units.NewQuantity("temperature")
+	Temp = units.NewQuantity("temperature", TempFormatter)
 )
+
+// TempFormatter is a ValueFormatter implementation
+func TempFormatter(v units.Value, opts units.FmtOptions) string {
+	vstr := strconv.FormatFloat(v.Val, 'f', opts.Precision, 64)
+
+	if opts.Short {
+		return fmt.Sprintf("%s %s", vstr, v.Unit.Symbol)
+	}
+	return fmt.Sprintf("%s %s", vstr, v.Unit.Name)
+}
 
 func init() {
 	C := Temp.NewUnit("celsius", "C")

@@ -35,14 +35,19 @@ func main() {
 		panic(err)
 	}
 
+	val := fromUnit.MakeValue(q)
+
 	_, toUnit, err := units.Find(u2)
 	if err != nil {
 		panic(err)
 	}
 
-	val, err := fromQ.Convert(q, fromUnit, toUnit)
+	newVal, err := fromQ.Convert(val, toUnit)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(val)
+
+	fmtOpts := units.FmtOptions{true, 3}
+
+	fmt.Println(fromQ.FmtValue(newVal, fmtOpts))
 }
