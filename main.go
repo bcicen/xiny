@@ -40,7 +40,9 @@ func main() {
 		panic(err)
 	}
 
-	fn := fromQ.Conv(fromUnit, toUnit)
-	val := fn(q)
+	val, err := fromQ.Convert(q, fromUnit, toUnit)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println(val)
 }

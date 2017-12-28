@@ -5,40 +5,23 @@ import (
 	valuate "github.com/Knetic/govaluate"
 )
 
+type ConversionFn func(float64) float64
+
 type Conversion struct {
 	From Unit
 	To   Unit
-}
-
-type ConversionFn func(float64) float64
-
-type ConversionMap map[Conversion]ConversionFn
-
-func (cm ConversionMap) Add(from, to Unit, fn ConversionFn) {
-	cm[Conversion{from, to}] = fn
-}
-
-func (cm ConversionMap) Lookup(from, to Unit) (ConversionFn, error) {
-	for k, v := range cm {
-		if k.From == from && k.To == to {
-			return v, nil
-		}
-	}
-	return nil, fmt.Errorf("conversion not found")
+	Fn   ConversionFn
 }
 
 type Quantity struct {
 	Name  string
 	Units []Unit
-	cmap  ConversionMap
+	conv  []Conversion
 }
 
 func NewQuantity(name string) *Quantity {
 	if _, ok := All[name]; !ok {
-		All[name] = &Quantity{
-			Name: name,
-			cmap: make(ConversionMap),
-		}
+		All[name] = &Quantity{Name: name}
 	}
 	fmt.Printf("added new quantity %s\n", name)
 	return All[name]
@@ -80,13 +63,24 @@ func (q *Quantity) NewConv(from, to Unit, formula string) {
 		return res.(float64)
 	}
 
-	q.cmap.Add(from, to, fn)
+	q.conv = append(q.conv, Conversion{from, to, fn})
 }
 
-func (q *Quantity) Conv(from, to Unit) ConversionFn {
-	fn, err := q.cmap.Lookup(from, to)
+// Convert provided value from one unit to another
+func (q *Quantity) Convert(val float64, from, to Unit) (newVal float64, err error) {
+	fn, err := q.lookup(from, to)
 	if err != nil {
-		panic(err)
+		return newVal, err
 	}
-	return fn
+	return fn(val), nil
+}
+
+// find conversion function between two units
+func (q *Quantity) lookup(from, to Unit) (ConversionFn, error) {
+	for _, c := range q.conv {
+		if c.From == from && c.To == to {
+			return c.Fn, nil
+		}
+	}
+	return nil, fmt.Errorf("conversion not found")
 }
