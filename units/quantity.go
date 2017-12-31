@@ -49,6 +49,13 @@ func (q *Quantity) FindUnit(s string) (Unit, error) {
 	return Unit{}, fmt.Errorf("unit \"%s\"not found", s)
 }
 
+// Create a conversion and the inverse, given a ratio of from Unit
+// in to Unit
+func (q *Quantity) NewRatioConv(from, to Unit, ratio float64) {
+	q.NewConv(from, to, fmt.Sprintf("x * %.12f", ratio))
+	q.NewConv(to, from, fmt.Sprintf("x / %.12f", ratio))
+}
+
 func (q *Quantity) NewConv(from, to Unit, formula string) {
 	expr, err := valuate.NewEvaluableExpression(formula)
 	if err != nil {

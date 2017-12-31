@@ -13,7 +13,7 @@ type FmtOptions struct {
 // ValueFormatter creates human-readable strings for a Unit value
 type ValueFormatter func(Value, FmtOptions) string
 
-func DefaultFmt(v Value, opts FmtOptions) string {
+func DefaultFormatter(v Value, opts FmtOptions) string {
 	label := v.Unit.Name
 	if opts.Short {
 		label = v.Unit.Symbol

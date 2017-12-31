@@ -1,18 +1,14 @@
-package temp
+package units
 
 import (
 	"fmt"
 	"strconv"
-
-	"github.com/bcicen/xiny/units"
 )
 
-var (
-	Temp = units.NewQuantity("temperature", TempFormatter)
-)
+var Temp = NewQuantity("temperature", TempFormatter)
 
 // TempFormatter is a ValueFormatter implementation
-func TempFormatter(v units.Value, opts units.FmtOptions) string {
+func TempFormatter(v Value, opts FmtOptions) string {
 	vstr := strconv.FormatFloat(v.Val, 'f', opts.Precision, 64)
 
 	if opts.Short {

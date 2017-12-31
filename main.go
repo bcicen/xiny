@@ -8,8 +8,6 @@ import (
 	"strings"
 
 	"github.com/bcicen/xiny/units"
-	//_ "github.com/bcicen/xiny/units/mass"
-	_ "github.com/bcicen/xiny/units/temp"
 )
 
 var re = regexp.MustCompile("^([0-9.]+)(\\w+) in (\\w+)")
