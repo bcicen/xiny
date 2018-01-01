@@ -2,16 +2,22 @@ package units
 
 import (
 	"fmt"
+
 	valuate "github.com/Knetic/govaluate"
+	"github.com/bcicen/xiny/bfstree"
 )
 
 type ConversionFn func(float64) float64
 
 type Conversion struct {
-	From Unit
-	To   Unit
+	from Unit
+	to   Unit
 	Fn   ConversionFn
 }
+
+// Conversion implements bfstree.Edge interface
+func (c Conversion) To() string   { return c.to.Name }
+func (c Conversion) From() string { return c.from.Name }
 
 type Quantity struct {
 	Name      string
@@ -81,18 +87,47 @@ func (q *Quantity) FmtValue(v Value, opts FmtOptions) string { return q.Formatte
 
 // Convert provided value from one unit to another
 func (q *Quantity) Convert(v Value, to Unit) (newVal Value, err error) {
-	fn, err := q.lookup(v.Unit, to)
+	fns, err := q.resolve(v.Unit, to)
 	if err != nil {
 		return newVal, err
 	}
 
-	return Value{fn(v.Val), to}, nil
+	fVal := v.Val
+	for _, fn := range fns {
+		fVal = fn(fVal)
+	}
+
+	return Value{fVal, to}, nil
+}
+
+// resolve a path of one or more conversions between two units
+func (q *Quantity) resolve(from, to Unit) (fns []ConversionFn, err error) {
+	tree := bfstree.NewBFSTree()
+	for _, cnv := range q.conv {
+		tree.AddEdge(cnv)
+	}
+
+	path, err := tree.FindPath(from.Name, to.Name)
+	if err != nil {
+		return fns, err
+	}
+
+	for _, edge := range path.Edges() {
+		fmt.Printf("%s -> %s\n", edge.From(), edge.To())
+		fn, err := q.lookup(edge.From(), edge.To())
+		if err != nil {
+			return fns, err
+		}
+		fns = append(fns, fn)
+	}
+
+	return fns, nil
 }
 
 // find conversion function between two units
-func (q *Quantity) lookup(from, to Unit) (ConversionFn, error) {
+func (q *Quantity) lookup(from, to string) (ConversionFn, error) {
 	for _, c := range q.conv {
-		if c.From == from && c.To == to {
+		if c.From() == from && c.To() == to {
 			return c.Fn, nil
 		}
 	}
