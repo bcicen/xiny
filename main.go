@@ -50,7 +50,7 @@ func main() {
 
 	val := fromUnit.MakeValue(q)
 
-	newVal, err := units.Convert(val, toUnit)
+	newVal, err := val.Convert(toUnit)
 	if err != nil {
 		panic(err)
 	}

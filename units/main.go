@@ -15,6 +15,26 @@ type Value struct {
 
 func (v Value) Fmt(opts FmtOptions) string { return v.Unit.Quantity.Formatter(v, opts) }
 
+// Convert this Value to another Unit, returning the new Value
+func (v Value) Convert(to Unit) (newVal Value, err error) {
+	// allow converting to same unit
+	if v.Unit == to {
+		return v, nil
+	}
+
+	fns, err := v.Unit.Quantity.Resolve(v.Unit, to)
+	if err != nil {
+		return newVal, err
+	}
+
+	fVal := v.Val
+	for _, fn := range fns {
+		fVal = fn(fVal)
+	}
+
+	return Value{fVal, to}, nil
+}
+
 type Unit struct {
 	Name     string
 	Symbol   string
@@ -32,24 +52,4 @@ func Find(s string) (Unit, error) {
 		}
 	}
 	return Unit{}, fmt.Errorf("unit \"%s\"not found", s)
-}
-
-// Convert a Value to another Unit
-func Convert(v Value, to Unit) (newVal Value, err error) {
-	// allow converting to same unit
-	if v.Unit == to {
-		return v, nil
-	}
-
-	fns, err := v.Unit.Quantity.Resolve(v.Unit, to)
-	if err != nil {
-		return newVal, err
-	}
-
-	fVal := v.Val
-	for _, fn := range fns {
-		fVal = fn(fVal)
-	}
-
-	return Value{fVal, to}, nil
 }
