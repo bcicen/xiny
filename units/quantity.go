@@ -11,9 +11,10 @@ import (
 type ConversionFn func(float64) float64
 
 type Conversion struct {
-	from Unit
-	to   Unit
-	Fn   ConversionFn
+	from    Unit
+	to      Unit
+	Fn      ConversionFn
+	Formula string
 }
 
 // Conversion implements bfstree.Edge interface
@@ -73,7 +74,7 @@ func (q *Quantity) NewConv(from, to Unit, formula string) {
 	}
 
 	log.Debugf("loaded conversion %s -> %s", from.Name, to.Name)
-	q.conv = append(q.conv, Conversion{from, to, fn})
+	q.conv = append(q.conv, Conversion{from, to, fn, formula})
 }
 
 // Resolve a path of one or more conversions between two units
@@ -89,23 +90,23 @@ func (q *Quantity) Resolve(from, to Unit) (fns []ConversionFn, err error) {
 	}
 
 	for _, edge := range path.Edges() {
-		fmt.Printf("%s -> %s\n", edge.From(), edge.To())
-		fn, err := q.lookup(edge.From(), edge.To())
+		conv, err := q.lookup(edge.From(), edge.To())
 		if err != nil {
 			return fns, err
 		}
-		fns = append(fns, fn)
+		log.Infof("%s -> %s [%s]", edge.From(), edge.To(), conv.Formula)
+		fns = append(fns, conv.Fn)
 	}
 
 	return fns, nil
 }
 
 // find conversion function between two units
-func (q *Quantity) lookup(from, to string) (ConversionFn, error) {
+func (q *Quantity) lookup(from, to string) (c Conversion, err error) {
 	for _, c := range q.conv {
 		if c.From() == from && c.To() == to {
-			return c.Fn, nil
+			return c, nil
 		}
 	}
-	return nil, fmt.Errorf("conversion not found")
+	return c, fmt.Errorf("conversion not found")
 }

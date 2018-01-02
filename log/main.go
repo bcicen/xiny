@@ -13,16 +13,22 @@ const (
 
 var (
 	Level  = DEBUG
-	red    = color.New(color.FgRed).SprintFunc()
-	cyan   = color.New(color.FgCyan).SprintFunc()
-	debugH = cyan("debug")
-	errorH = red("error")
+	debugH = color.CyanString("debug")
+	infoH  = color.GreenString("info")
+	errorH = color.RedString("error")
 )
 
 func Debugf(format string, a ...interface{}) {
 	if Level >= DEBUG {
 		s := fmt.Sprintf(format, a...)
 		fmt.Printf("%s %s\n", debugH, s)
+	}
+}
+
+func Infof(format string, a ...interface{}) {
+	if Level >= INFO {
+		s := fmt.Sprintf(format, a...)
+		fmt.Printf("%s %s\n", infoH, s)
 	}
 }
 
