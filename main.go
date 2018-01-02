@@ -25,20 +25,29 @@ func parse(s string) (float64, string, string) {
 	return q, mg[2], mg[3]
 }
 
+func exitErr(err error) {
+	fmt.Printf("err %s\n", err)
+	os.Exit(1)
+}
+
 func main() {
 	q, u1, u2 := parse(strings.Join(os.Args[1:], " "))
 
 	fromQ, fromUnit, err := units.Find(u1)
 	if err != nil {
-		panic(err)
+		exitErr(err)
+	}
+
+	toQ, toUnit, err := units.Find(u2)
+	if err != nil {
+		exitErr(err)
+	}
+
+	if fromQ != toQ {
+		exitErr(fmt.Errorf("unit mismatch: cannot convert %s -> %s", fromQ.Name, toQ.Name))
 	}
 
 	val := fromUnit.MakeValue(q)
-
-	_, toUnit, err := units.Find(u2)
-	if err != nil {
-		panic(err)
-	}
 
 	newVal, err := fromQ.Convert(val, toUnit)
 	if err != nil {

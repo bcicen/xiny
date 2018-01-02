@@ -55,8 +55,6 @@ func (b *BFSTree) FindPath(start string, end string) (path *Path, err error) {
 	for len(paths) > 0 {
 		var newPaths []*Path
 
-		fmt.Printf("nopaths %d\n", len(paths))
-
 		for _, p := range paths {
 			children := b.fromNode(p.Last().To())
 
