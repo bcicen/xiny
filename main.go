@@ -7,13 +7,13 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/bcicen/xiny/log"
 	"github.com/bcicen/xiny/units"
 )
 
 var re = regexp.MustCompile("^([0-9.]+)(\\w+) in (\\w+)")
 
 func parse(s string) (float64, string, string) {
-	fmt.Println(s)
 	mg := re.FindStringSubmatch(s)
 	if len(mg) != 4 {
 		panic(fmt.Errorf("parse error"))
@@ -26,7 +26,7 @@ func parse(s string) (float64, string, string) {
 }
 
 func exitErr(err error) {
-	fmt.Printf("err %s\n", err)
+	log.Error(err)
 	os.Exit(1)
 }
 
@@ -52,10 +52,9 @@ func main() {
 
 	newVal, err := val.Convert(toUnit)
 	if err != nil {
-		panic(err)
+		exitErr(err)
 	}
 
 	fmtOpts := units.FmtOptions{true, 3}
-
 	fmt.Println(newVal.Fmt(fmtOpts))
 }

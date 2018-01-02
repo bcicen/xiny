@@ -5,6 +5,7 @@ import (
 
 	valuate "github.com/Knetic/govaluate"
 	"github.com/bcicen/xiny/bfstree"
+	"github.com/bcicen/xiny/log"
 )
 
 type ConversionFn func(float64) float64
@@ -30,7 +31,7 @@ func NewQuantity(name string, formatter ValueFormatter) *Quantity {
 		Name:      name,
 		Formatter: formatter,
 	}
-	fmt.Printf("added new quantity %s\n", name)
+	log.Debugf("loaded quantity %s", name)
 	return q
 }
 
@@ -41,7 +42,7 @@ func (q *Quantity) NewUnit(name, symbol string) Unit {
 	}
 	u := Unit{name, symbol, q}
 	UnitMap[name] = u
-	fmt.Printf("added new unit %s\n", name)
+	log.Debugf("loaded unit %s", name)
 	return u
 }
 
@@ -71,6 +72,7 @@ func (q *Quantity) NewConv(from, to Unit, formula string) {
 		return res.(float64)
 	}
 
+	log.Debugf("loaded conversion %s -> %s", from.Name, to.Name)
 	q.conv = append(q.conv, Conversion{from, to, fn})
 }
 
