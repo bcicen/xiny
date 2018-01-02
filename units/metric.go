@@ -33,7 +33,7 @@ var Magnitudes = []magnitude{
 	{"k", "kilo", 3.0},
 	{"h", "hecto", 2.0},
 	{"da", "deca", 1.0},
-	{"", "", 0.0},
+	//{"", "", 0.0},
 	{"d", "deci", -1.0},
 	{"c", "centi", -2.0},
 	{"m", "milli", -3.0},

@@ -14,14 +14,16 @@ type FmtOptions struct {
 type ValueFormatter func(Value, FmtOptions) string
 
 func DefaultFormatter(v Value, opts FmtOptions) string {
-	label := v.Unit.Name
+	var label string
+
 	if opts.Short {
 		label = v.Unit.Symbol
-	}
-
-	// make label plural if needed
-	if v.Val > 1.0 {
-		label = fmt.Sprintf("%ss", label)
+	} else {
+		label := v.Unit.Name
+		// make label plural if needed
+		if v.Val > 1.0 {
+			label = fmt.Sprintf("%ss", label)
+		}
 	}
 
 	vstr := strconv.FormatFloat(v.Val, 'f', opts.Precision, 64)

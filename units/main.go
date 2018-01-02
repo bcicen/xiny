@@ -5,7 +5,7 @@ import (
 )
 
 var (
-	All = make(map[string]*Quantity)
+	UnitMap = make(map[string]Unit)
 )
 
 type Value struct {
@@ -13,21 +13,43 @@ type Value struct {
 	Unit Unit
 }
 
+func (v Value) Fmt(opts FmtOptions) string { return v.Unit.Quantity.Formatter(v, opts) }
+
 type Unit struct {
-	Name   string
-	Symbol string
+	Name     string
+	Symbol   string
+	Quantity *Quantity
 }
 
 // Return a Value for this Unit
 func (u Unit) MakeValue(v float64) Value { return Value{v, u} }
 
-// return unit matching name or symbol provided
-func Find(s string) (*Quantity, Unit, error) {
-	for _, q := range All {
-		u, err := q.FindUnit(s)
-		if err == nil {
-			return q, u, nil
+// Find Unit matching name or symbol provided
+func Find(s string) (Unit, error) {
+	for _, u := range UnitMap {
+		if u.Name == s || u.Symbol == s {
+			return u, nil
 		}
 	}
-	panic(fmt.Errorf("oops"))
+	return Unit{}, fmt.Errorf("unit \"%s\"not found", s)
+}
+
+// Convert a Value to another Unit
+func Convert(v Value, to Unit) (newVal Value, err error) {
+	// allow converting to same unit
+	if v.Unit == to {
+		return v, nil
+	}
+
+	fns, err := v.Unit.Quantity.Resolve(v.Unit, to)
+	if err != nil {
+		return newVal, err
+	}
+
+	fVal := v.Val
+	for _, fn := range fns {
+		fVal = fn(fVal)
+	}
+
+	return Value{fVal, to}, nil
 }

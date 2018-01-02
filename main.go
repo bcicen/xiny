@@ -33,28 +33,29 @@ func exitErr(err error) {
 func main() {
 	q, u1, u2 := parse(strings.Join(os.Args[1:], " "))
 
-	fromQ, fromUnit, err := units.Find(u1)
+	fromUnit, err := units.Find(u1)
 	if err != nil {
 		exitErr(err)
 	}
 
-	toQ, toUnit, err := units.Find(u2)
+	toUnit, err := units.Find(u2)
 	if err != nil {
 		exitErr(err)
 	}
 
-	if fromQ != toQ {
-		exitErr(fmt.Errorf("unit mismatch: cannot convert %s -> %s", fromQ.Name, toQ.Name))
+	if fromUnit.Quantity != toUnit.Quantity {
+		e := fmt.Sprintf("%s -> %s", fromUnit.Quantity.Name, toUnit.Quantity.Name)
+		exitErr(fmt.Errorf("unit mismatch: cannot convert %s", e))
 	}
 
 	val := fromUnit.MakeValue(q)
 
-	newVal, err := fromQ.Convert(val, toUnit)
+	newVal, err := units.Convert(val, toUnit)
 	if err != nil {
 		panic(err)
 	}
 
 	fmtOpts := units.FmtOptions{true, 3}
 
-	fmt.Println(fromQ.FmtValue(newVal, fmtOpts))
+	fmt.Println(newVal.Fmt(fmtOpts))
 }
