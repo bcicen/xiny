@@ -12,7 +12,7 @@ const (
 )
 
 var (
-	Level  = DEBUG
+	Level  = ERROR // default
 	debugH = color.CyanString("debug")
 	infoH  = color.GreenString("info")
 	errorH = color.RedString("error")

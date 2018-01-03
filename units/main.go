@@ -2,6 +2,7 @@ package units
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -45,6 +46,16 @@ type Unit struct {
 // Return a Value for this Unit
 func (u Unit) MakeValue(v float64) Value { return Value{v, u} }
 
+// Return sorted list of all Unit names and symbols
+func Names() (a []string) {
+	for _, u := range UnitMap {
+		a = append(a, u.Name)
+		a = append(a, u.Symbol)
+	}
+	sort.Strings(a)
+	return a
+}
+
 // Find Unit matching name or symbol provided
 func Find(s string) (Unit, error) {
 
@@ -59,6 +70,16 @@ func Find(s string) (Unit, error) {
 	for _, u := range UnitMap {
 		if matchUnitName(s, u, false) {
 			return u, nil
+		}
+	}
+
+	// finally, try stripping plural suffix
+	if strings.HasSuffix(s, "s") {
+		s = strings.TrimSuffix(s, "s")
+		for _, u := range UnitMap {
+			if matchUnitName(s, u, false) {
+				return u, nil
+			}
 		}
 	}
 
