@@ -11,7 +11,7 @@ import (
 	"github.com/bcicen/xiny/units"
 )
 
-var re = regexp.MustCompile("^([0-9.]+)(\\w+) in (\\w+)")
+var re = regexp.MustCompile("([0-9.]+)\\s*(\\w+)\\s+in\\s+(\\w+)")
 
 func parse(s string) (float64, string, string) {
 	mg := re.FindStringSubmatch(s)
