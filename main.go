@@ -25,12 +25,25 @@ func parse(s string) (float64, string, string) {
 	return q, mg[2], mg[3]
 }
 
+func listUnits() { fmt.Println(strings.Join(units.Names(), "\n")) }
+
 func exitErr(err error) {
 	log.Error(err)
 	os.Exit(1)
 }
 
 func main() {
+
+	if len(os.Args) == 2 {
+		switch os.Args[1] {
+		case "list-units":
+			listUnits()
+		default:
+			exitErr(fmt.Errorf("unknown command"))
+		}
+		os.Exit(0)
+	}
+
 	q, u1, u2 := parse(strings.Join(os.Args[1:], " "))
 
 	fromUnit, err := units.Find(u1)
