@@ -11,7 +11,7 @@ import (
 	"github.com/bcicen/xiny/units"
 )
 
-var re = regexp.MustCompile("([0-9.]+)\\s*(\\w+)\\s+in\\s+(\\w+)")
+var re = regexp.MustCompile("(-?[0-9.]+)\\s*(\\w+)\\s+in\\s+(\\w+)")
 
 func parse(s string) (float64, string, string) {
 	mg := re.FindStringSubmatch(s)
@@ -53,6 +53,12 @@ func parseOpts(s string) string {
 	return s
 }
 
+func usage() {
+	fmt.Println("usage: xiny [options] [input]\n")
+	fmt.Println("e.g xiny 20kg in lbs\n")
+	os.Exit(1)
+}
+
 func listUnits() { fmt.Println(strings.Join(units.Names(), "\n")) }
 
 func exitErr(err error) {
@@ -61,6 +67,9 @@ func exitErr(err error) {
 }
 
 func main() {
+	if len(os.Args) == 1 {
+		usage()
+	}
 
 	cmd := parseOpts(strings.Join(os.Args[1:], " "))
 
