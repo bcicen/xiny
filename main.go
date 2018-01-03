@@ -25,6 +25,34 @@ func parse(s string) (float64, string, string) {
 	return q, mg[2], mg[3]
 }
 
+func handleOpt(opt string) {
+	switch opt {
+	case "v":
+		log.Level = log.INFO
+	case "vv":
+		log.Level = log.DEBUG
+	case "list":
+		listUnits()
+		os.Exit(0)
+	default:
+		exitErr(fmt.Errorf("unknown option: -%s", opt))
+	}
+}
+
+// parse out and handle options, returning the remainder of the command line
+func parseOpts(s string) string {
+	ore := regexp.MustCompile("-([a-z]+)")
+	matches := ore.FindAllString(s, -1)
+
+	for _, m := range matches {
+		opt := strings.TrimPrefix(m, "-")
+		handleOpt(opt)
+		s = strings.Replace(s, m, "", 1)
+	}
+
+	return s
+}
+
 func listUnits() { fmt.Println(strings.Join(units.Names(), "\n")) }
 
 func exitErr(err error) {
@@ -34,17 +62,9 @@ func exitErr(err error) {
 
 func main() {
 
-	if len(os.Args) == 2 {
-		switch os.Args[1] {
-		case "list-units":
-			listUnits()
-		default:
-			exitErr(fmt.Errorf("unknown command"))
-		}
-		os.Exit(0)
-	}
+	cmd := parseOpts(strings.Join(os.Args[1:], " "))
 
-	q, u1, u2 := parse(strings.Join(os.Args[1:], " "))
+	q, u1, u2 := parse(cmd)
 
 	fromUnit, err := units.Find(u1)
 	if err != nil {
