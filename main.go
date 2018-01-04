@@ -93,6 +93,6 @@ func main() {
 		exitErr(err)
 	}
 
-	fmtOpts := units.FmtOptions{true, 3}
+	fmtOpts := units.FmtOptions{false, 6}
 	fmt.Println(newVal.Fmt(fmtOpts))
 }
