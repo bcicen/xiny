@@ -24,8 +24,8 @@ func parseCmd(s string) (float64, string, string) {
 	return q, mg[2], mg[3]
 }
 
-// parse out options
-func parseOpts(s *string) (cmd string, opts []string) {
+// parse out and return options
+func parseOpts(s *string) (opts []string) {
 	ns := *s
 
 	matches := optRe.FindAllString(ns, -1)

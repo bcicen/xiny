@@ -9,27 +9,50 @@ import (
 	"github.com/bcicen/xiny/units"
 )
 
-func handleOpt(opt string) {
-	switch opt {
-	case "v":
-		log.Level = log.INFO
-	case "vv":
-		log.Level = log.DEBUG
-	case "list":
-		listUnits()
-		os.Exit(0)
-	default:
-		exitErr(fmt.Errorf("unknown option: -%s", opt))
+type Opt struct {
+	name    string
+	desc    string
+	handler func()
+}
+
+func handleOpt(s string) {
+	if s == "h" || s == "help" {
+		usage()
 	}
+	for _, opt := range opts {
+		if opt.name == s {
+			opt.handler()
+			return
+		}
+	}
+	exitErr(fmt.Errorf("unknown option: -%s", s))
+}
+
+var opts = []Opt{
+	{"v", "enable verbose output", func() { log.Level = log.INFO }},
+	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
+	{"list", "list all potential unit names and exit", listUnits},
 }
 
 func usage() {
-	fmt.Println("usage: xiny [options] [input]\n")
-	fmt.Println("e.g xiny 20kg in lbs\n")
+	s := []string{
+		"usage: xiny [options] [input]\n",
+		"e.g xiny 20kg in lbs\n",
+		"options",
+	}
+
+	for _, opt := range opts {
+		s = append(s, fmt.Sprintf(" -%s	%s", opt.name, opt.desc))
+	}
+
+	fmt.Println(strings.Join(s, "\n"))
 	os.Exit(1)
 }
 
-func listUnits() { fmt.Println(strings.Join(units.Names(), "\n")) }
+func listUnits() {
+	fmt.Println(strings.Join(units.Names(), "\n"))
+	os.Exit(0)
+}
 
 func exitErr(err error) {
 	log.Error(err)
@@ -42,8 +65,8 @@ func main() {
 	}
 
 	cmd := strings.Join(os.Args[1:], " ")
-	for _, opt := range parseOpts(&cmd) {
-		handleOpt(opt)
+	for _, optName := range parseOpts(&cmd) {
+		handleOpt(optName)
 	}
 
 	q, u1, u2 := parseCmd(cmd)
