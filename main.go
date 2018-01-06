@@ -9,6 +9,14 @@ import (
 	"github.com/bcicen/xiny/units"
 )
 
+var (
+	usageStr = []string{
+		"usage: xiny [options] [input]\n",
+		"e.g xiny 20kg in lbs\n",
+		"options",
+	}
+)
+
 type Opt struct {
 	name    string
 	desc    string
@@ -35,18 +43,13 @@ var opts = []Opt{
 }
 
 func usage() {
-	s := []string{
-		"usage: xiny [options] [input]\n",
-		"e.g xiny 20kg in lbs\n",
-		"options",
-	}
-
+	var optUsage []string
 	for _, opt := range opts {
-		s = append(s, fmt.Sprintf(" -%s	%s", opt.name, opt.desc))
+		optUsage = append(optUsage, fmt.Sprintf(" -%s	%s", opt.name, opt.desc))
 	}
 
-	fmt.Println(strings.Join(s, "\n"))
-	os.Exit(1)
+	fmt.Println(strings.Join(append(usageStr, optUsage...), "\n"))
+	os.Exit(0)
 }
 
 func listUnits() {
