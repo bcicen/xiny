@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	cmdRe = regexp.MustCompile("(-?[0-9.]+)\\s*(\\w+)\\s+in\\s+(\\w+)")
+	cmdRe = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+(.+)")
 	optRe = regexp.MustCompile("-([a-z]+)")
 )
 
