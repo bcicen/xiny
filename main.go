@@ -57,12 +57,38 @@ func listUnits() {
 	os.Exit(0)
 }
 
+func failOnErr(err error, pfix ...string) {
+	if err != nil {
+		if len(pfix) != 0 {
+			err = fmt.Errorf("%s: %s", pfix[0], err)
+		}
+		exitErr(err)
+	}
+}
+
 func exitErr(err error) {
 	log.Error(err)
 	os.Exit(1)
 }
 
+func panicExit() {
+	var err error
+	if r := recover(); r != nil {
+		switch x := r.(type) {
+		case string:
+			err = fmt.Errorf(r.(string))
+		case error:
+			err = x
+		default:
+			panic(r)
+		}
+		exitErr(err)
+	}
+}
+
 func main() {
+	defer panicExit()
+
 	if len(os.Args) == 1 {
 		usage()
 	}
@@ -72,30 +98,22 @@ func main() {
 		handleOpt(optName)
 	}
 
-	q, u1, u2 := parseCmd(cmd)
+	convCmd, err := parseCmd(cmd)
+	failOnErr(err, "parse error")
 
-	fromUnit, err := units.Find(u1)
-	if err != nil {
-		exitErr(err)
-	}
-
-	toUnit, err := units.Find(u2)
-	if err != nil {
-		exitErr(err)
-	}
+	fromUnit := units.MustFind(convCmd.from)
+	toUnit := units.MustFind(convCmd.to)
 
 	if fromUnit.Quantity != toUnit.Quantity {
 		e := fmt.Sprintf("%s -> %s", fromUnit.Quantity.Name, toUnit.Quantity.Name)
 		exitErr(fmt.Errorf("unit mismatch: cannot convert %s", e))
 	}
 
-	val := fromUnit.MakeValue(q)
+	val := fromUnit.MakeValue(convCmd.amount)
 
-	newVal, err := val.Convert(toUnit)
-	if err != nil {
-		exitErr(err)
-	}
+	val, err = val.Convert(toUnit)
+	failOnErr(err)
 
 	fmtOpts := units.FmtOptions{false, 6}
-	fmt.Println(newVal.Fmt(fmtOpts))
+	fmt.Println(val.Fmt(fmtOpts))
 }

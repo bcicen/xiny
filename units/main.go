@@ -56,6 +56,15 @@ func Names() (a []string) {
 	return a
 }
 
+// Find Unit matching name or symbol provided, panicking on failure
+func MustFind(s string) Unit {
+	u, err := Find(s)
+	if err != nil {
+		panic(err)
+	}
+	return u
+}
+
 // Find Unit matching name or symbol provided
 func Find(s string) (Unit, error) {
 
