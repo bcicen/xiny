@@ -83,8 +83,9 @@ func Find(s string) (Unit, error) {
 	}
 
 	// finally, try stripping plural suffix
-	if strings.HasSuffix(s, "s") {
+	if strings.HasSuffix(s, "s") || strings.HasSuffix(s, "S") {
 		s = strings.TrimSuffix(s, "s")
+		s = strings.TrimSuffix(s, "S")
 		for _, u := range UnitMap {
 			if matchUnitName(s, u, false) {
 				return u, nil
@@ -101,8 +102,7 @@ func matchUnitName(s string, u Unit, matchCase bool) bool {
 	}
 
 	if !matchCase {
-		ls := strings.ToLower(s)
-		if strings.ToLower(u.Name) == ls || strings.ToLower(u.Symbol) == ls {
+		if strings.EqualFold(s, u.Name) || strings.EqualFold(s, u.Symbol) {
 			return true
 		}
 	}
