@@ -2,6 +2,7 @@ package units
 
 import (
 	"fmt"
+	"strings"
 
 	valuate "github.com/Knetic/govaluate"
 	"github.com/bcicen/xiny/bfstree"
@@ -20,6 +21,8 @@ type Conversion struct {
 // Conversion implements bfstree.Edge interface
 func (c Conversion) To() string   { return c.to.Name }
 func (c Conversion) From() string { return c.from.Name }
+
+func (c Conversion) String() string { return c.Formula }
 
 type Quantity struct {
 	Name string
@@ -40,8 +43,9 @@ func (q *Quantity) NewUnit(name, symbol string, opts ...UnitOption) Unit {
 // Create a conversion and the inverse, given a ratio of from Unit
 // in to Unit
 func (q *Quantity) NewRatioConv(from, to Unit, ratio float64) {
-	q.NewConv(from, to, fmt.Sprintf("x * %.12f", ratio))
-	q.NewConv(to, from, fmt.Sprintf("x / %.12f", ratio))
+	ratioStr := trimTrailing(fmt.Sprintf("%.12f", ratio))
+	q.NewConv(from, to, fmt.Sprintf("x * %s", ratioStr))
+	q.NewConv(to, from, fmt.Sprintf("x / %s", ratioStr))
 }
 
 // Create a new conversion from one unit to another
@@ -79,14 +83,20 @@ func (q *Quantity) Resolve(from, to Unit) (fns []ConversionFn, err error) {
 		return fns, err
 	}
 
+	formula := ""
 	for _, edge := range path.Edges() {
 		conv, err := q.lookup(edge.From(), edge.To())
 		if err != nil {
 			return fns, err
 		}
-		log.Infof("%s -> %s [%s]", edge.From(), edge.To(), conv.Formula)
+		if formula != "" {
+			formula = fmt.Sprintf("(%s)", strings.Replace(conv.Formula, "x", formula, 1))
+		} else {
+			formula = fmt.Sprintf("(%s)", conv.Formula)
+		}
 		fns = append(fns, conv.Fn)
 	}
+	log.Infof("%s -> %s: %s", from.Name, to.Name, formula)
 
 	return fns, nil
 }
