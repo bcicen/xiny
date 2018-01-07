@@ -18,6 +18,13 @@ var (
 	}
 )
 
+var opts = []Opt{
+	{"i", "use interactive mode", func() { interactive() }},
+	{"v", "enable verbose output", func() { log.Level = log.INFO }},
+	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
+	{"list", "list all potential unit names and exit", listUnits},
+}
+
 type Opt struct {
 	name    string
 	desc    string
@@ -35,13 +42,6 @@ func handleOpt(s string) {
 		}
 	}
 	exitErr(fmt.Errorf("unknown option: -%s", s))
-}
-
-var opts = []Opt{
-	{"i", "use interactive mode", func() { interactive() }},
-	{"v", "enable verbose output", func() { log.Level = log.INFO }},
-	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
-	{"list", "list all potential unit names and exit", listUnits},
 }
 
 func usage() {
@@ -73,7 +73,7 @@ func exitErr(err error) {
 	os.Exit(1)
 }
 
-func panicExit() {
+func recovery(exit bool) {
 	var err error
 	if r := recover(); r != nil {
 		switch x := r.(type) {
@@ -84,7 +84,13 @@ func panicExit() {
 		default:
 			panic(r)
 		}
-		exitErr(err)
+		log.Error(err)
+		if exit {
+			os.Exit(1)
+		}
+	}
+	if exit {
+		os.Exit(0)
 	}
 }
 
@@ -114,7 +120,7 @@ func doConvert(cmd string) string {
 }
 
 func main() {
-	defer panicExit()
+	defer recovery(true)
 
 	if len(os.Args) == 1 {
 		usage()

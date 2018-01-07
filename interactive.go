@@ -62,6 +62,7 @@ func Executor(s string) {
 	if s == "exit" {
 		os.Exit(0)
 	}
+	defer recovery(false)
 	fmt.Println(doConvert(s))
 }
 
