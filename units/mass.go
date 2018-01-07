@@ -1,6 +1,6 @@
 package units
 
-var Mass = NewQuantity("mass", DefaultFormatter)
+var Mass = NewQuantity("mass")
 
 func init() {
 	gram := Mass.NewUnit("gram", "g")

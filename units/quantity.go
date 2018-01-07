@@ -22,29 +22,19 @@ func (c Conversion) To() string   { return c.to.Name }
 func (c Conversion) From() string { return c.from.Name }
 
 type Quantity struct {
-	Name      string
-	Formatter ValueFormatter
-	conv      []Conversion
+	Name string
+	conv []Conversion
 }
 
-func NewQuantity(name string, formatter ValueFormatter) *Quantity {
-	q := &Quantity{
-		Name:      name,
-		Formatter: formatter,
-	}
+func NewQuantity(name string) *Quantity {
+	q := &Quantity{Name: name}
 	log.Debugf("loaded quantity %s", name)
 	return q
 }
 
 // Create a new Unit within this quantity and return it
-func (q *Quantity) NewUnit(name, symbol string) Unit {
-	if _, ok := UnitMap[name]; ok {
-		panic(fmt.Errorf("duplicate unit name: %s", name))
-	}
-	u := Unit{name, symbol, q}
-	UnitMap[name] = u
-	log.Debugf("loaded unit %s", name)
-	return u
+func (q *Quantity) NewUnit(name, symbol string, opts ...UnitOption) Unit {
+	return NewUnit(name, symbol, q, opts...)
 }
 
 // Create a conversion and the inverse, given a ratio of from Unit

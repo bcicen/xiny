@@ -1,6 +1,6 @@
 package units
 
-var Time = NewQuantity("time", DefaultFormatter)
+var Time = NewQuantity("time")
 
 func init() {
 	second := Time.NewUnit("second", "s")

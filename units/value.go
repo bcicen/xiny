@@ -11,10 +11,32 @@ type FmtOptions struct {
 	Precision int  // precision to truncate value
 }
 
-// ValueFormatter creates human-readable strings for a Unit value
-type ValueFormatter func(Value, FmtOptions) string
+type Value struct {
+	Val  float64
+	Unit Unit
+}
 
-func DefaultFormatter(v Value, opts FmtOptions) string {
+// Convert this Value to another Unit, returning the new Value
+func (v Value) Convert(to Unit) (newVal Value, err error) {
+	// allow converting to same unit
+	if v.Unit == to {
+		return v, nil
+	}
+
+	fns, err := v.Unit.Quantity.Resolve(v.Unit, to)
+	if err != nil {
+		return newVal, err
+	}
+
+	fVal := v.Val
+	for _, fn := range fns {
+		fVal = fn(fVal)
+	}
+
+	return Value{fVal, to}, nil
+}
+
+func (v Value) Fmt(opts FmtOptions) string {
 	var label string
 
 	if opts.Short {
@@ -22,7 +44,7 @@ func DefaultFormatter(v Value, opts FmtOptions) string {
 	} else {
 		label = v.Unit.Name
 		// make label plural if needed
-		if v.Val > 1.0 {
+		if v.Unit.plural && v.Val > 1.0 {
 			label = fmt.Sprintf("%ss", label)
 		}
 	}

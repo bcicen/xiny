@@ -10,42 +10,6 @@ var (
 	UnitMap = make(map[string]Unit)
 )
 
-type Value struct {
-	Val  float64
-	Unit Unit
-}
-
-func (v Value) Fmt(opts FmtOptions) string { return v.Unit.Quantity.Formatter(v, opts) }
-
-// Convert this Value to another Unit, returning the new Value
-func (v Value) Convert(to Unit) (newVal Value, err error) {
-	// allow converting to same unit
-	if v.Unit == to {
-		return v, nil
-	}
-
-	fns, err := v.Unit.Quantity.Resolve(v.Unit, to)
-	if err != nil {
-		return newVal, err
-	}
-
-	fVal := v.Val
-	for _, fn := range fns {
-		fVal = fn(fVal)
-	}
-
-	return Value{fVal, to}, nil
-}
-
-type Unit struct {
-	Name     string
-	Symbol   string
-	Quantity *Quantity
-}
-
-// Return a Value for this Unit
-func (u Unit) MakeValue(v float64) Value { return Value{v, u} }
-
 // Return sorted list of all Unit names and symbols
 func Names() (a []string) {
 	for _, u := range UnitMap {

@@ -1,6 +1,6 @@
 package units
 
-var Length = NewQuantity("length", DefaultFormatter)
+var Length = NewQuantity("length")
 
 func init() {
 	metre := Length.NewUnit("metre", "m")
