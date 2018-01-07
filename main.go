@@ -10,6 +10,7 @@ import (
 )
 
 var (
+	version  = "dev-build"
 	usageStr = []string{
 		"usage: xiny [options] [input]\n",
 		"e.g xiny 20kg in lbs\n",
@@ -37,6 +38,7 @@ func handleOpt(s string) {
 }
 
 var opts = []Opt{
+	{"i", "use interactive mode", func() { interactive() }},
 	{"v", "enable verbose output", func() { log.Level = log.INFO }},
 	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
 	{"list", "list all potential unit names and exit", listUnits},
