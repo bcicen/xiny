@@ -52,7 +52,11 @@ var (
 func buildSuggest() (a []prompt.Suggest) {
 	for _, u := range units.UnitMap {
 		a = append(a, prompt.Suggest{Text: u.Symbol})
-		a = append(a, prompt.Suggest{Text: u.Name})
+		name := u.Name
+		if u.Plural() {
+			name += "s"
+		}
+		a = append(a, prompt.Suggest{Text: name})
 	}
 	return a
 }

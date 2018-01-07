@@ -10,7 +10,7 @@ type Unit struct {
 	Name     string
 	Symbol   string
 	Quantity *Quantity
-	plural   bool // whether this unit can be described with a plural suffix
+	plural   bool
 }
 
 func NewUnit(name, symbol string, q *Quantity, opts ...UnitOption) Unit {
@@ -33,6 +33,9 @@ func NewUnit(name, symbol string, q *Quantity, opts ...UnitOption) Unit {
 	log.Debugf("loaded unit %s", name)
 	return u
 }
+
+// Return whether this unit can be described with a plural suffix
+func (u Unit) Plural() bool { return u.plural }
 
 // Return a Value for this Unit
 func (u Unit) MakeValue(v float64) Value { return Value{v, u} }
