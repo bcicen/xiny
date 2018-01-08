@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-// register individual units for all metric magnitudes, given a base unit
+// Create individual units and conversions for all metric magnitudes, given a base unit
 func MakeMagnitudeUnits(q *Quantity, baseUnit Unit) {
 	for _, mag := range Magnitudes {
 		name := fmt.Sprintf("%s%s", mag.Prefix, baseUnit.Name)

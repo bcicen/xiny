@@ -3,7 +3,7 @@ package units
 var Length = NewQuantity("length")
 
 func init() {
-	metre := Length.NewUnit("metre", "m")
+	metre := Length.NewUnit("metre", "m", UnitOptionAliases("meter"))
 	MakeMagnitudeUnits(Length, metre)
 
 	inch := Length.NewUnit("inch", "in")

@@ -33,14 +33,14 @@ func Find(s string) (Unit, error) {
 
 	// first try case-sensitive match
 	for _, u := range UnitMap {
-		if matchUnitName(s, u, true) {
+		if matchUnit(s, u, true) {
 			return u, nil
 		}
 	}
 
 	// then case-insensitive
 	for _, u := range UnitMap {
-		if matchUnitName(s, u, false) {
+		if matchUnit(s, u, false) {
 			return u, nil
 		}
 	}
@@ -50,7 +50,7 @@ func Find(s string) (Unit, error) {
 		s = strings.TrimSuffix(s, "s")
 		s = strings.TrimSuffix(s, "S")
 		for _, u := range UnitMap {
-			if matchUnitName(s, u, false) {
+			if matchUnit(s, u, false) {
 				return u, nil
 			}
 		}
@@ -59,7 +59,7 @@ func Find(s string) (Unit, error) {
 	return Unit{}, fmt.Errorf("unit \"%s\" not found", s)
 }
 
-func matchUnitName(s string, u Unit, matchCase bool) bool {
+func matchUnit(s string, u Unit, matchCase bool) bool {
 	for _, name := range u.Names() {
 		if matchCase {
 			if name == s {

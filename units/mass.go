@@ -13,7 +13,7 @@ func init() {
 	pound := Mass.NewUnit("pound", "lb")
 	stone := Mass.NewUnit("stone", "st")
 	ton := Mass.NewUnit("ton", "t")
-	slug := Mass.NewUnit("slug", "slug")
+	slug := Mass.NewUnit("slug", "")
 
 	Mass.NewRatioConv(grain, gram, 0.06479891)
 	Mass.NewRatioConv(drachm, gram, 1.7718451953125)

@@ -27,7 +27,7 @@ func init() {
 	Time.NewRatioConv(millennium, year, 1000.0)
 
 	// more esoteric time units
-	planckTime := Time.NewUnit("planck time", "tP")
+	planckTime := Time.NewUnit("planck time", "𝑡ₚ")
 	Time.NewRatioConv(planckTime, second, 5.39e-44)
 
 	fortnight := Time.NewUnit("fortnight", "")
