@@ -43,7 +43,7 @@ func (q *Quantity) NewUnit(name, symbol string, opts ...UnitOption) Unit {
 // Create a conversion and the inverse, given a ratio of from Unit
 // in to Unit
 func (q *Quantity) NewRatioConv(from, to Unit, ratio float64) {
-	ratioStr := trimTrailing(fmt.Sprintf("%.12f", ratio))
+	ratioStr := trimTrailing(fmt.Sprintf("%.62f", ratio))
 	q.NewConv(from, to, fmt.Sprintf("x * %s", ratioStr))
 	q.NewConv(to, from, fmt.Sprintf("x / %s", ratioStr))
 }
