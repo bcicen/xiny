@@ -13,8 +13,7 @@ var (
 // Return sorted list of all Unit names and symbols
 func Names() (a []string) {
 	for _, u := range UnitMap {
-		a = append(a, u.Name)
-		a = append(a, u.Symbol)
+		a = append(a, u.Names()...)
 	}
 	sort.Strings(a)
 	return a
@@ -61,13 +60,15 @@ func Find(s string) (Unit, error) {
 }
 
 func matchUnitName(s string, u Unit, matchCase bool) bool {
-	if u.Name == s || u.Symbol == s {
-		return true
-	}
-
-	if !matchCase {
-		if strings.EqualFold(s, u.Name) || strings.EqualFold(s, u.Symbol) {
-			return true
+	for _, name := range u.Names() {
+		if matchCase {
+			if name == s {
+				return true
+			}
+		} else {
+			if strings.EqualFold(s, name) {
+				return true
+			}
 		}
 	}
 

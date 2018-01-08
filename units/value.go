@@ -19,7 +19,7 @@ type Value struct {
 // Convert this Value to another Unit, returning the new Value
 func (v Value) Convert(to Unit) (newVal Value, err error) {
 	// allow converting to same unit
-	if v.Unit == to {
+	if v.Unit.Name == to.Name {
 		return v, nil
 	}
 
