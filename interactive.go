@@ -12,23 +12,7 @@ import (
 )
 
 var (
-	ColorTheme = []prompt.Option{
-		prompt.OptionPrefixTextColor(prompt.Blue),
-		prompt.OptionPrefixBackgroundColor(prompt.DefaultColor),
-		prompt.OptionInputTextColor(prompt.DefaultColor),
-		prompt.OptionInputBGColor(prompt.DefaultColor),
-		prompt.OptionPreviewSuggestionTextColor(prompt.Cyan),
-		prompt.OptionPreviewSuggestionBGColor(prompt.DefaultColor),
-		prompt.OptionSuggestionTextColor(prompt.White),
-		prompt.OptionSuggestionBGColor(prompt.DarkGray),
-		prompt.OptionSelectedSuggestionTextColor(prompt.Black),
-		prompt.OptionSelectedSuggestionBGColor(prompt.LightGray),
-		prompt.OptionDescriptionTextColor(prompt.White),
-		prompt.OptionDescriptionBGColor(prompt.DarkGray),
-		prompt.OptionSelectedDescriptionTextColor(prompt.Black),
-		prompt.OptionSelectedDescriptionBGColor(prompt.LightGray),
-	}
-	MonoTheme = []prompt.Option{
+	Theme = []prompt.Option{
 		prompt.OptionPrefixTextColor(prompt.Blue),
 		prompt.OptionPrefixBackgroundColor(prompt.DefaultColor),
 		prompt.OptionInputTextColor(prompt.DefaultColor),
@@ -38,10 +22,10 @@ var (
 		prompt.OptionSuggestionTextColor(prompt.White),
 		prompt.OptionSuggestionBGColor(prompt.DefaultColor),
 		prompt.OptionSelectedSuggestionTextColor(prompt.Black),
-		prompt.OptionSelectedSuggestionBGColor(prompt.LightGray),
-		prompt.OptionDescriptionTextColor(prompt.White),
+		prompt.OptionSelectedSuggestionBGColor(prompt.White),
+		prompt.OptionDescriptionTextColor(prompt.LightGray),
 		prompt.OptionDescriptionBGColor(prompt.DefaultColor),
-		prompt.OptionSelectedDescriptionTextColor(prompt.Black),
+		prompt.OptionSelectedDescriptionTextColor(prompt.LightGray),
 		prompt.OptionSelectedDescriptionBGColor(prompt.DefaultColor),
 	}
 	unitSuggestions  = buildSuggest()
@@ -51,12 +35,12 @@ var (
 
 func buildSuggest() (a []prompt.Suggest) {
 	for _, u := range units.UnitMap {
-		a = append(a, prompt.Suggest{Text: u.Symbol})
+		a = append(a, prompt.Suggest{Text: u.Symbol, Description: u.Quantity.Name})
 		name := u.Name
 		if u.Plural() {
 			name += "s"
 		}
-		a = append(a, prompt.Suggest{Text: name})
+		a = append(a, prompt.Suggest{Text: name, Description: u.Quantity.Name})
 	}
 	return a
 }
@@ -136,7 +120,7 @@ func interactive() {
 	p := prompt.New(
 		Executor,
 		Completer,
-		append(opts, MonoTheme...)...,
+		append(opts, Theme...)...,
 	)
 	p.Run()
 
