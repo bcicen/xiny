@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 	"strings"
 	"unicode"
 
@@ -29,22 +30,31 @@ var (
 		prompt.OptionSelectedDescriptionBGColor(prompt.DefaultColor),
 	}
 	quantityFilterStr string
-	unitSuggestions   = buildSuggest()
+	unitSuggestions   = buildSuggest(false)
 	emptySuggestions  = []prompt.Suggest{}
 	progress1Re       = regexp.MustCompile("-?[0-9.]+\\s+")
 	progress2Re       = regexp.MustCompile("(-?[0-9.]+)\\s*([a-zA-Z|\\s]+)\\s+")
 	progress3Re       = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+")
 )
 
-func buildSuggest() (a []prompt.Suggest) {
+type UnitSuggests []prompt.Suggest
+
+func (a UnitSuggests) Len() int           { return len(a) }
+func (a UnitSuggests) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a UnitSuggests) Less(i, j int) bool { return a[i].Text < a[j].Text }
+
+func buildSuggest(includeSymbols bool) (a UnitSuggests) {
 	for _, u := range units.UnitMap {
-		a = append(a, prompt.Suggest{Text: u.Symbol, Description: u.Quantity.Name})
+		if includeSymbols {
+			a = append(a, prompt.Suggest{Text: u.Symbol, Description: u.Quantity.Name})
+		}
 		name := u.Name
 		if u.Plural() {
 			name += "s"
 		}
 		a = append(a, prompt.Suggest{Text: name, Description: u.Quantity.Name})
 	}
+	sort.Sort(a)
 	return a
 }
 
