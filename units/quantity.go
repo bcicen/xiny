@@ -9,6 +9,10 @@ import (
 	"github.com/bcicen/xiny/log"
 )
 
+var (
+	QuantityMap = make(map[string]*Quantity)
+)
+
 type ConversionFn func(float64) float64
 
 type Conversion struct {
@@ -31,6 +35,7 @@ type Quantity struct {
 
 func NewQuantity(name string) *Quantity {
 	q := &Quantity{Name: name}
+	QuantityMap[name] = q
 	log.Debugf("loaded quantity %s", name)
 	return q
 }
