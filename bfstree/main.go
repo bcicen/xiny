@@ -5,6 +5,16 @@ import (
 	"strings"
 )
 
+var (
+	DEBUG = false
+)
+
+func dbg(format string, a ...interface{}) {
+	if DEBUG {
+		fmt.Printf(format, a...)
+	}
+}
+
 type Edge interface {
 	From() string
 	To() string
@@ -41,6 +51,7 @@ func (b *BFSTree) fromNode(start string) (res []Edge) {
 }
 
 func (b *BFSTree) FindPath(start string, end string) (path *Path, err error) {
+	var iter int
 	var paths []*Path
 
 	// Create start paths from origin node
@@ -55,11 +66,15 @@ func (b *BFSTree) FindPath(start string, end string) (path *Path, err error) {
 	for len(paths) > 0 {
 		var newPaths []*Path
 
+		dbg("iter %d\n", iter)
+
 		for _, p := range paths {
+			dbg("  %s\n", p)
 			children := b.fromNode(p.Last().To())
 
 			// maximum path depth reached, drop
 			if len(children) == 0 {
+				dbg("    dropped path (no children): %s", p)
 				continue
 			}
 
@@ -67,11 +82,13 @@ func (b *BFSTree) FindPath(start string, end string) (path *Path, err error) {
 			for _, e := range children {
 				// drop circular paths
 				if p.IsCircular(e) {
+					dbg("    dropped circular child: %s->%s\n", e.From(), e.To())
 					continue
 				}
 
 				np := NewPath(p.edges...)
 				np.AddEdge(e)
+				dbg("    new path branch: %s\n", np)
 
 				if e.To() == end {
 					return np, nil
@@ -79,6 +96,7 @@ func (b *BFSTree) FindPath(start string, end string) (path *Path, err error) {
 				newPaths = append(newPaths, np)
 			}
 		}
+		iter++
 		paths = newPaths
 	}
 
@@ -89,7 +107,13 @@ type Path struct {
 	*BFSTree
 }
 
-func NewPath(edges ...Edge) *Path { return &Path{&BFSTree{edges}} }
+func NewPath(edges ...Edge) *Path {
+	np := &Path{&BFSTree{}}
+	for _, e := range edges {
+		np.AddEdge(e)
+	}
+	return np
+}
 
 func (p *Path) Last() Edge { return p.edges[len(p.edges)-1] }
 
