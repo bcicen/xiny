@@ -28,9 +28,12 @@ var (
 		prompt.OptionSelectedDescriptionTextColor(prompt.LightGray),
 		prompt.OptionSelectedDescriptionBGColor(prompt.DefaultColor),
 	}
-	unitSuggestions  = buildSuggest()
-	emptySuggestions = []prompt.Suggest{}
-	alphaRe          = regexp.MustCompile("([a-zA-Z]+)")
+	quantityFilterStr string
+	unitSuggestions   = buildSuggest()
+	emptySuggestions  = []prompt.Suggest{}
+	progress1Re       = regexp.MustCompile("-?[0-9.]+\\s+")
+	progress2Re       = regexp.MustCompile("(-?[0-9.]+)\\s*([a-zA-Z|\\s]+)\\s+")
+	progress3Re       = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+")
 )
 
 func buildSuggest() (a []prompt.Suggest) {
@@ -78,35 +81,54 @@ func runeBeforeCursor(d prompt.Document) rune {
 	return empty
 }
 
-func stripNumbers(s string) string { return alphaRe.FindString(s) }
+func filterQuantity() []prompt.Suggest {
+	if quantityFilterStr == "" {
+		return unitSuggestions
+	}
+
+	var filtered []prompt.Suggest
+
+	for _, us := range unitSuggestions {
+		if us.Description == quantityFilterStr {
+			filtered = append(filtered, us)
+		}
+	}
+
+	return filtered
+}
 
 func Completer(d prompt.Document) []prompt.Suggest {
-	//if !unicode.IsLetter(runeBeforeCursor(d)) {
-	//return emptySuggestions
-	//}
-
-	args := strings.Split(d.TextBeforeCursor(), " ")
-	argLen := len(args)
-
-	if argLen == 0 {
-		return emptySuggestions
-	}
-
-	// if first arg is both quantity and unit, treat it is two args
-	if stripNumbers(args[0]) != "" {
-		argLen += 1
-	}
-
-	if argLen == 3 {
-		return []prompt.Suggest{{Text: "in"}}
-	}
-
+	cmd := d.TextBeforeCursor()
 	w := d.GetWordBeforeCursor()
-	if w == "" {
+
+	if cmd == "" {
 		return emptySuggestions
 	}
 
-	return prompt.FilterHasPrefix(unitSuggestions, w, true)
+	if progress3Re.FindString(cmd) != "" {
+		return prompt.FilterHasPrefix(filterQuantity(), w, true)
+	}
+
+	mg := progress2Re.FindStringSubmatch(cmd)
+	if mg != nil {
+		if quantityFilterStr == "" {
+			fromName := strings.Trim(mg[2], " ")
+			unit, err := units.Find(fromName)
+			if err == nil {
+				quantityFilterStr = unit.Quantity.Name
+			}
+		}
+		if quantityFilterStr != "" {
+			return []prompt.Suggest{{Text: "in", Description: "keyword"}}
+		}
+	}
+
+	if progress1Re.FindString(cmd) != "" {
+		return prompt.FilterHasPrefix(unitSuggestions, w, true)
+	}
+
+	quantityFilterStr = ""
+	return emptySuggestions
 }
 
 func interactive() {
