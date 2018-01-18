@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	valuate "github.com/Knetic/govaluate"
-	"github.com/bcicen/xiny/bfstree"
+	"github.com/bcicen/bfstree"
 	"github.com/bcicen/xiny/log"
 )
 
@@ -78,7 +78,7 @@ func (q *Quantity) NewConv(from, to Unit, formula string) {
 
 // Resolve a path of one or more conversions between two units
 func (q *Quantity) Resolve(from, to Unit) (fns []ConversionFn, err error) {
-	tree := bfstree.NewBFSTree()
+	tree := bfstree.New()
 	for _, cnv := range q.conv {
 		tree.AddEdge(cnv)
 	}
