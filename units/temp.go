@@ -1,14 +1,16 @@
 package units
 
-var Temp = NewQuantity("temperature")
+var (
+	Temp = NewQuantity("temperature")
+
+	Celsius   = Temp.NewUnit("celsius", "C", UnitOptionPlural(false))
+	Farenheit = Temp.NewUnit("farenheit", "F", UnitOptionPlural(false))
+	Kelvin    = Temp.NewUnit("kelvin", "K", UnitOptionPlural(false))
+)
 
 func init() {
-	C := Temp.NewUnit("celsius", "C", UnitOptionPlural(false))
-	F := Temp.NewUnit("farenheit", "F", UnitOptionPlural(false))
-	K := Temp.NewUnit("kelvin", "K", UnitOptionPlural(false))
-
-	Temp.NewConv(C, F, "x * 1.8 + 32")
-	Temp.NewConv(F, C, "(x - 32) / 1.8")
-	Temp.NewConv(C, K, "x + 273.15")
-	Temp.NewConv(K, C, "x - 273.15")
+	Temp.NewConv(Celsius, Farenheit, "x * 1.8 + 32")
+	Temp.NewConv(Farenheit, Celsius, "(x - 32) / 1.8")
+	Temp.NewConv(Celsius, Kelvin, "x + 273.15")
+	Temp.NewConv(Kelvin, Celsius, "x - 273.15")
 }

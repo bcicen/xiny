@@ -6,30 +6,70 @@ import (
 	"strings"
 )
 
+var (
+	exa   = Magnitude{"E", "exa", 18.0}
+	peta  = Magnitude{"P", "peta", 15.0}
+	tera  = Magnitude{"T", "tera", 12.0}
+	giga  = Magnitude{"G", "giga", 9.0}
+	mega  = Magnitude{"M", "mega", 6.0}
+	kilo  = Magnitude{"k", "kilo", 3.0}
+	hecto = Magnitude{"h", "hecto", 2.0}
+	deca  = Magnitude{"da", "deca", 1.0}
+	deci  = Magnitude{"d", "deci", -1.0}
+	centi = Magnitude{"c", "centi", -2.0}
+	milli = Magnitude{"m", "milli", -3.0}
+	micro = Magnitude{"μ", "micro", -6.0}
+	nano  = Magnitude{"n", "nano", -9.0}
+	pico  = Magnitude{"p", "pico", -12.0}
+	femto = Magnitude{"f", "femto", -15.0}
+	atto  = Magnitude{"a", "atto", -18.0}
+)
+
+var (
+	magnitudes = []Magnitude{
+		exa,
+		peta,
+		tera,
+		giga,
+		mega,
+		kilo,
+		hecto,
+		deca,
+		deci,
+		centi,
+		milli,
+		micro,
+		nano,
+		pico,
+		femto,
+		atto,
+	}
+)
+
 type Magnitude struct {
 	Symbol string
 	Prefix string
 	Power  float64
 }
 
-var magnitudes = []Magnitude{
-	{"E", "exa", 18.0},
-	{"P", "peta", 15.0},
-	{"T", "tera", 12.0},
-	{"G", "giga", 9.0},
-	{"M", "mega", 6.0},
-	{"k", "kilo", 3.0},
-	{"h", "hecto", 2.0},
-	{"da", "deca", 1.0},
-	//{"", "", 0.0},
-	{"d", "deci", -1.0},
-	{"c", "centi", -2.0},
-	{"m", "milli", -3.0},
-	{"μ", "micro", -6.0},
-	{"n", "nano", -9.0},
-	{"p", "pico", -12.0},
-	{"f", "femto", -15.0},
-	{"a", "atto", -18.0},
+// Create magnitude unit and conversion given a base unit
+func (mag Magnitude) makeUnit(q *Quantity, baseUnit Unit) Unit {
+	name := fmt.Sprintf("%s%s", mag.Prefix, baseUnit.Name)
+	symbol := fmt.Sprintf("%s%s", mag.Symbol, baseUnit.Symbol)
+
+	var opts []UnitOption
+	for _, alias := range baseUnit.aliases {
+		magAlias := fmt.Sprintf("%s%s", mag.Prefix, alias)
+		opts = append(opts, UnitOptionAliases(magAlias))
+	}
+
+	u := q.NewUnit(name, symbol, opts...)
+
+	// only create conversions to and from base unit
+	ratio := 1.0 * math.Pow(10.0, mag.Power)
+	q.NewRatioConv(u, baseUnit, ratio)
+
+	return u
 }
 
 // find and return a magnitude by prefix or symbol

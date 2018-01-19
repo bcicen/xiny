@@ -1,38 +1,54 @@
 package units
 
-var Time = NewQuantity("time")
+var (
+	Time = NewQuantity("time")
 
-func init() {
-	second := Time.NewUnit("second", "s")
-	MakeMagnitudeUnits(Time, second)
+	Second      = Time.NewUnit("second", "s")
+	ExaSecond   = exa.makeUnit(Time, Second)
+	PetaSecond  = peta.makeUnit(Time, Second)
+	TeraSecond  = tera.makeUnit(Time, Second)
+	GigaSecond  = giga.makeUnit(Time, Second)
+	MegaSecond  = mega.makeUnit(Time, Second)
+	KiloSecond  = kilo.makeUnit(Time, Second)
+	HectoSecond = hecto.makeUnit(Time, Second)
+	DecaSecond  = deca.makeUnit(Time, Second)
+	DeciSecond  = deci.makeUnit(Time, Second)
+	CentiSecond = centi.makeUnit(Time, Second)
+	MilliSecond = milli.makeUnit(Time, Second)
+	MicroSecond = micro.makeUnit(Time, Second)
+	NanoSecond  = nano.makeUnit(Time, Second)
+	PicoSecond  = pico.makeUnit(Time, Second)
+	FemtoSecond = femto.makeUnit(Time, Second)
+	AttoSecond  = atto.makeUnit(Time, Second)
 
-	minute := Time.NewUnit("minute", "min")
-	hour := Time.NewUnit("hour", "hr")
-	day := Time.NewUnit("day", "d")
-	month := Time.NewUnit("month", "")
-	year := Time.NewUnit("year", "yr")
+	Minute = Time.NewUnit("minute", "min")
+	Hour   = Time.NewUnit("hour", "hr")
+	Day    = Time.NewUnit("day", "d")
+	Month  = Time.NewUnit("month", "")
+	Year   = Time.NewUnit("year", "yr")
 
-	Time.NewRatioConv(minute, second, 60.0)
-	Time.NewRatioConv(hour, second, 3600.0)
-	Time.NewRatioConv(day, hour, 24.0)
-	Time.NewRatioConv(month, day, 30.0)
-	Time.NewRatioConv(year, day, 365.25)
-
-	decade := Time.NewUnit("decade", "")
-	century := Time.NewUnit("century", "")
-	millennium := Time.NewUnit("millennium", "")
-
-	Time.NewRatioConv(decade, year, 10.0)
-	Time.NewRatioConv(century, year, 100.0)
-	Time.NewRatioConv(millennium, year, 1000.0)
+	Decade     = Time.NewUnit("decade", "")
+	Century    = Time.NewUnit("century", "")
+	Millennium = Time.NewUnit("millennium", "")
 
 	// more esoteric time units
-	planckTime := Time.NewUnit("planck time", "𝑡ₚ")
-	Time.NewRatioConv(planckTime, second, 5.39e-44)
+	PlanckTime = Time.NewUnit("planck time", "𝑡ₚ")
+	Fortnight  = Time.NewUnit("fortnight", "")
+	Score      = Time.NewUnit("score", "")
+)
 
-	fortnight := Time.NewUnit("fortnight", "")
-	Time.NewRatioConv(fortnight, day, 14)
+func init() {
+	Time.NewRatioConv(Minute, Second, 60.0)
+	Time.NewRatioConv(Hour, Second, 3600.0)
+	Time.NewRatioConv(Day, Hour, 24.0)
+	Time.NewRatioConv(Month, Day, 30.0)
+	Time.NewRatioConv(Year, Day, 365.25)
 
-	score := Time.NewUnit("score", "")
-	Time.NewRatioConv(score, year, 20.0)
+	Time.NewRatioConv(Decade, Year, 10.0)
+	Time.NewRatioConv(Century, Year, 100.0)
+	Time.NewRatioConv(Millennium, Year, 1000.0)
+
+	Time.NewRatioConv(PlanckTime, Second, 5.39e-44)
+	Time.NewRatioConv(Fortnight, Day, 14)
+	Time.NewRatioConv(Score, Year, 20.0)
 }
