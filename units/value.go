@@ -6,6 +6,8 @@ import (
 	"strings"
 )
 
+var DefaultFmtOptions = FmtOptions{false, 6}
+
 type FmtOptions struct {
 	Short     bool // if false, use unit shortname or symbol
 	Precision int  // precision to truncate value
@@ -35,6 +37,8 @@ func (v Value) Convert(to Unit) (newVal Value, err error) {
 
 	return Value{fVal, to}, nil
 }
+
+func (v Value) String() string { return v.Fmt(DefaultFmtOptions) }
 
 func (v Value) Fmt(opts FmtOptions) string {
 	var label string

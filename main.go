@@ -115,8 +115,7 @@ func doConvert(cmd string) string {
 		panic(err)
 	}
 
-	fmtOpts := units.FmtOptions{false, 6}
-	return val.Fmt(fmtOpts)
+	return val.String()
 }
 
 func main() {
