@@ -2,6 +2,8 @@ package units
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
 	"strings"
 
 	valuate "github.com/Knetic/govaluate"
@@ -48,7 +50,7 @@ func (q *Quantity) NewUnit(name, symbol string, opts ...UnitOption) Unit {
 // Create a conversion and the inverse, given a ratio of from Unit
 // in to Unit
 func (q *Quantity) NewRatioConv(from, to Unit, ratio float64) {
-	ratioStr := trimTrailing(fmt.Sprintf("%.62f", ratio))
+	ratioStr := fmt.Sprintf("%.62f", ratio)
 	q.NewConv(from, to, fmt.Sprintf("x * %s", ratioStr))
 	q.NewConv(to, from, fmt.Sprintf("x / %s", ratioStr))
 }
@@ -73,7 +75,7 @@ func (q *Quantity) NewConv(from, to Unit, formula string) {
 	}
 
 	log.Debugf("loaded conversion %s -> %s", from.Name, to.Name)
-	q.conv = append(q.conv, Conversion{from, to, fn, formula})
+	q.conv = append(q.conv, Conversion{from, to, fn, fmtFormula(formula)})
 }
 
 // Resolve a path of one or more conversions between two units
@@ -99,6 +101,7 @@ func (q *Quantity) Resolve(from, to Unit) (fns []ConversionFn, err error) {
 		} else {
 			formula = fmt.Sprintf("(%s)", conv.Formula)
 		}
+		log.Debugf("%s -> %s: %s", edge.From(), edge.To(), conv.Formula)
 		fns = append(fns, conv.Fn)
 	}
 	log.Infof("%s -> %s: %s", from.Name, to.Name, formula)
@@ -114,4 +117,16 @@ func (q *Quantity) lookup(from, to string) (c Conversion, err error) {
 		}
 	}
 	return c, fmt.Errorf("conversion not found")
+}
+
+func fmtFormula(s string) string {
+	re := regexp.MustCompile("(-?[0-9.]+)")
+	for _, match := range re.FindAllString(s, -1) {
+		f, err := strconv.ParseFloat(match, 64)
+		if err != nil {
+			panic(err)
+		}
+		s = strings.Replace(s, match, fmt.Sprintf("%g", f), 1)
+	}
+	return s
 }
