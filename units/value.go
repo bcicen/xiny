@@ -2,6 +2,7 @@ package units
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -10,7 +11,7 @@ var DefaultFmtOptions = FmtOptions{false, 6}
 
 type FmtOptions struct {
 	Short     bool // if false, use unit shortname or symbol
-	Precision int  // precision to truncate value
+	Precision int  // maximum meaningful precision to truncate value
 }
 
 type Value struct {
@@ -53,7 +54,13 @@ func (v Value) Fmt(opts FmtOptions) string {
 		}
 	}
 
-	vstr := strconv.FormatFloat(v.Val, 'f', opts.Precision, 64)
+	prec := opts.Precision
+	// expand precision if needed to present meaningful value
+	if v.Val < 1 {
+		prec = int((math.Log10(v.Val)-0.5)*-1) + prec
+	}
+
+	vstr := strconv.FormatFloat(v.Val, 'f', prec, 64)
 	vstr = trimTrailing(vstr)
 
 	return fmt.Sprintf("%s %s", vstr, label)
