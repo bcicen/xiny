@@ -29,12 +29,15 @@ var (
 		prompt.OptionSelectedDescriptionTextColor(prompt.LightGray),
 		prompt.OptionSelectedDescriptionBGColor(prompt.DefaultColor),
 	}
+
+	promptChar        = "〉"
 	quantityFilterStr string
 	unitSuggestions   = buildSuggest(false)
 	emptySuggestions  = []prompt.Suggest{}
-	progress1Re       = regexp.MustCompile("-?[0-9.]+\\s+")
-	progress2Re       = regexp.MustCompile("(-?[0-9.]+)\\s*([a-zA-Z|\\s]+)\\s+")
-	progress3Re       = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+")
+
+	progress1Re = regexp.MustCompile("-?[0-9.]+\\s+")
+	progress2Re = regexp.MustCompile("(-?[0-9.]+)\\s*([a-zA-Z|\\s]+)\\s+")
+	progress3Re = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+")
 )
 
 type UnitSuggests []prompt.Suggest
@@ -159,7 +162,7 @@ func interactive() {
 	defer fmt.Println("bye!")
 	opts := []prompt.Option{
 		prompt.OptionTitle("xiny interactive mode"),
-		prompt.OptionPrefix(">>> "),
+		prompt.OptionPrefix("〉"),
 	}
 	p := prompt.New(
 		Executor,
