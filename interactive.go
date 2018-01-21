@@ -91,13 +91,25 @@ func runeBeforeCursor(d prompt.Document) rune {
 	return empty
 }
 
+func filterContains(suggests []prompt.Suggest, sub string) []prompt.Suggest {
+	sub = strings.ToLower(sub)
+
+	var filtered []prompt.Suggest
+	for _, s := range suggests {
+		if strings.Contains(s.Text, sub) {
+			filtered = append(filtered, s)
+		}
+	}
+
+	return filtered
+}
+
 func filterQuantity() []prompt.Suggest {
 	if quantityFilterStr == "" {
 		return unitSuggestions
 	}
 
 	var filtered []prompt.Suggest
-
 	for _, us := range unitSuggestions {
 		if us.Description == quantityFilterStr {
 			filtered = append(filtered, us)
@@ -116,7 +128,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	}
 
 	if progress3Re.FindString(cmd) != "" {
-		return prompt.FilterHasPrefix(filterQuantity(), w, true)
+		return filterContains(filterQuantity(), w)
 	}
 
 	mg := progress2Re.FindStringSubmatch(cmd)
@@ -134,7 +146,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	}
 
 	if progress1Re.FindString(cmd) != "" {
-		return prompt.FilterHasPrefix(unitSuggestions, w, true)
+		return filterContains(unitSuggestions, w)
 	}
 
 	quantityFilterStr = ""
