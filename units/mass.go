@@ -23,13 +23,13 @@ var (
 	AttoGram  = atto.makeUnit(Mass, Gram)
 
 	// imperial
-	Grain  = Mass.NewUnit("grain", "gr")
-	Drachm = Mass.NewUnit("drachm", "dr")
-	Ounce  = Mass.NewUnit("ounce", "oz")
-	Pound  = Mass.NewUnit("pound", "lb")
-	Stone  = Mass.NewUnit("stone", "st")
-	Ton    = Mass.NewUnit("ton", "t")
-	Slug   = Mass.NewUnit("slug", "")
+	Grain  = Mass.NewUnit("grain", "gr", BI)
+	Drachm = Mass.NewUnit("drachm", "dr", BI)
+	Ounce  = Mass.NewUnit("ounce", "oz", BI)
+	Pound  = Mass.NewUnit("pound", "lb", BI)
+	Stone  = Mass.NewUnit("stone", "st", BI)
+	Ton    = Mass.NewUnit("ton", "t", BI)
+	Slug   = Mass.NewUnit("slug", "", BI)
 )
 
 func init() {

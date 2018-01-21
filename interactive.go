@@ -40,29 +40,64 @@ var (
 	progress3Re = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+")
 )
 
-type UnitSuggests []prompt.Suggest
+type UnitSuggest struct {
+	prompt.Suggest
+	Quantity string
+	System   string
+}
+
+type UnitSuggests []UnitSuggest
 
 func (a UnitSuggests) Len() int           { return len(a) }
 func (a UnitSuggests) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a UnitSuggests) Less(i, j int) bool { return a[i].Text < a[j].Text }
 
 func buildSuggest(includeSymbols bool) (a UnitSuggests) {
-	for _, u := range units.UnitMap {
-		if includeSymbols {
-			a = append(a, prompt.Suggest{Text: u.Symbol, Description: u.Quantity.Name})
+	// determine max spacing width to align description field
+	var descWidth int
+	for name, _ := range units.QuantityMap {
+		if len(name) > descWidth {
+			descWidth = len(name)
 		}
+	}
+	descWidth++
+
+	for _, u := range units.UnitMap {
+		desc := unitDesc(u, descWidth)
 		name := u.Name
 		if u.Plural() {
 			name += "s"
 		}
-		a = append(a, prompt.Suggest{Text: name, Description: u.Quantity.Name})
+
+		x := UnitSuggest{
+			Suggest:  prompt.Suggest{Text: name, Description: desc},
+			Quantity: u.Quantity.Name,
+			System:   u.System(),
+		}
+		a = append(a, x)
+
+		if includeSymbols {
+			x.Text = u.Symbol
+			a = append(a, x)
+		}
 	}
+
 	sort.Sort(a)
 	return a
 }
 
+func unitDesc(u units.Unit, minWidth int) string {
+	s := u.Quantity.Name
+	if u.System() != "" {
+		s += strings.Repeat(" ", minWidth-len(s))
+		s += fmt.Sprintf("[%s]", u.System())
+	}
+	return s
+}
+
 func Executor(s string) {
 	s = strings.TrimSpace(s)
+	s = strings.Replace(s, "  ", " ", -1)
 	if s == "exit" {
 		os.Exit(0)
 	}
@@ -108,14 +143,10 @@ func filterContains(suggests []prompt.Suggest, sub string) []prompt.Suggest {
 }
 
 func filterQuantity() []prompt.Suggest {
-	if quantityFilterStr == "" {
-		return unitSuggestions
-	}
-
 	var filtered []prompt.Suggest
 	for _, us := range unitSuggestions {
-		if us.Description == quantityFilterStr {
-			filtered = append(filtered, us)
+		if us.Quantity == quantityFilterStr || quantityFilterStr == "" {
+			filtered = append(filtered, us.Suggest)
 		}
 	}
 
@@ -149,7 +180,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	}
 
 	if progress1Re.FindString(cmd) != "" {
-		return filterContains(unitSuggestions, w)
+		return filterContains(filterQuantity(), w)
 	}
 
 	quantityFilterStr = ""
@@ -163,6 +194,7 @@ func interactive() {
 	opts := []prompt.Option{
 		prompt.OptionTitle("xiny interactive mode"),
 		prompt.OptionPrefix("〉"),
+		prompt.OptionMaxSuggestion(8),
 	}
 	p := prompt.New(
 		Executor,

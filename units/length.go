@@ -22,12 +22,12 @@ var (
 	FemtoMeter = femto.makeUnit(Length, Meter)
 	AttoMeter  = atto.makeUnit(Length, Meter)
 
-	Inch    = Length.NewUnit("inch", "in")
-	Feet    = Length.NewUnit("feet", "ft")
-	Yard    = Length.NewUnit("yard", "yd")
-	Mile    = Length.NewUnit("mile", "ml")
-	League  = Length.NewUnit("league", "lea")
-	Furlong = Length.NewUnit("furlong", "fur")
+	Inch    = Length.NewUnit("inch", "in", BI)
+	Feet    = Length.NewUnit("feet", "ft", BI, UnitOptionAliases("foot"))
+	Yard    = Length.NewUnit("yard", "yd", BI)
+	Mile    = Length.NewUnit("mile", "", BI)
+	League  = Length.NewUnit("league", "lea", BI)
+	Furlong = Length.NewUnit("furlong", "fur", BI)
 )
 
 func init() {

@@ -3,9 +3,9 @@ package units
 var (
 	Temp = NewQuantity("temperature")
 
-	Celsius   = Temp.NewUnit("celsius", "C", UnitOptionPlural(false))
-	Farenheit = Temp.NewUnit("farenheit", "F", UnitOptionPlural(false))
-	Kelvin    = Temp.NewUnit("kelvin", "K", UnitOptionPlural(false))
+	Celsius   = Temp.NewUnit("celsius", "C", UnitOptionPlural(false), SI)
+	Farenheit = Temp.NewUnit("farenheit", "F", UnitOptionPlural(false), US)
+	Kelvin    = Temp.NewUnit("kelvin", "K", UnitOptionPlural(false), SI)
 )
 
 func init() {

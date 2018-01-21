@@ -57,7 +57,7 @@ func (mag Magnitude) makeUnit(q *Quantity, baseUnit Unit) Unit {
 	name := fmt.Sprintf("%s%s", mag.Prefix, baseUnit.Name)
 	symbol := fmt.Sprintf("%s%s", mag.Symbol, baseUnit.Symbol)
 
-	var opts []UnitOption
+	opts := []UnitOption{SI}
 	for _, alias := range baseUnit.aliases {
 		magAlias := fmt.Sprintf("%s%s", mag.Prefix, alias)
 		opts = append(opts, UnitOptionAliases(magAlias))

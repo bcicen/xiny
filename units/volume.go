@@ -23,16 +23,16 @@ var (
 	AttoLiter  = atto.makeUnit(Volume, Liter)
 
 	// imperial
-	Quart      = Volume.NewUnit("quart", "qt")
-	Pint       = Volume.NewUnit("pint", "pt")
-	Gallon     = Volume.NewUnit("gallon", "gal")
-	FluidOunce = Volume.NewUnit("fluid ounce", "fl oz")
+	Quart      = Volume.NewUnit("quart", "qt", BI)
+	Pint       = Volume.NewUnit("pint", "pt", BI)
+	Gallon     = Volume.NewUnit("gallon", "gal", BI)
+	FluidOunce = Volume.NewUnit("fluid ounce", "fl oz", BI)
 
 	// US
-	FluidQuart          = Volume.NewUnit("fluid quart", "")
-	FluidPint           = Volume.NewUnit("fluid pint", "")
-	FluidGallon         = Volume.NewUnit("fluid gallon", "")
-	CustomaryFluidOunce = Volume.NewUnit("customary fluid ounce", "")
+	FluidQuart          = Volume.NewUnit("fluid quart", "", US)
+	FluidPint           = Volume.NewUnit("fluid pint", "", US)
+	FluidGallon         = Volume.NewUnit("fluid gallon", "", US)
+	CustomaryFluidOunce = Volume.NewUnit("customary fluid ounce", "", US)
 )
 
 func init() {

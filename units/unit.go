@@ -6,12 +6,20 @@ import (
 	"github.com/bcicen/xiny/log"
 )
 
+var (
+	// shorthand unit systems
+	BI = UnitOptionSystem("imperial")
+	SI = UnitOptionSystem("metric")
+	US = UnitOptionSystem("us")
+)
+
 type Unit struct {
 	Name     string
 	Symbol   string
 	Quantity *Quantity
 	plural   bool
 	aliases  []string
+	system   string
 }
 
 func NewUnit(name, symbol string, q *Quantity, opts ...UnitOption) Unit {
@@ -44,6 +52,9 @@ func (u Unit) Names() []string {
 	return append(names, u.aliases...)
 }
 
+// Return the system of units this Unit belongs to, if any
+func (u Unit) System() string { return u.system }
+
 // Return whether this unit can be described with a plural suffix
 func (u Unit) Plural() bool { return u.plural }
 
@@ -67,6 +78,14 @@ func UnitOptionAliases(a ...string) UnitOption {
 		for _, s := range a {
 			u.aliases = append(u.aliases, s)
 		}
+		return u
+	}
+}
+
+// Set a system of units for which this Unit belongs
+func UnitOptionSystem(s string) UnitOption {
+	return func(u Unit) Unit {
+		u.system = s
 		return u
 	}
 }
