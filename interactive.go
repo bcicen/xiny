@@ -95,9 +95,14 @@ func unitDesc(u units.Unit, minWidth int) string {
 func Executor(s string) {
 	s = strings.TrimSpace(s)
 	s = strings.Replace(s, "  ", " ", -1)
-	if s == "exit" {
+
+	switch s {
+	case "":
+		return
+	case "exit":
 		os.Exit(0)
 	}
+
 	defer recovery(false)
 	fmt.Println(doConvert(s))
 }
