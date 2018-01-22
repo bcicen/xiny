@@ -129,17 +129,22 @@ func runeBeforeCursor(d prompt.Document) rune {
 	return empty
 }
 
-func filterContains(suggests []prompt.Suggest, sub string) []prompt.Suggest {
+// filter suggestions by a given substring
+func filterName(suggests []prompt.Suggest, sub string) []prompt.Suggest {
 	sub = strings.ToLower(sub)
 
-	var filtered []prompt.Suggest
+	var primary, secondary []prompt.Suggest
 	for _, s := range suggests {
+		if strings.HasPrefix(s.Text, sub) {
+			primary = append(primary, s)
+			continue
+		}
 		if strings.Contains(s.Text, sub) {
-			filtered = append(filtered, s)
+			secondary = append(secondary, s)
 		}
 	}
 
-	return filtered
+	return append(primary, secondary...)
 }
 
 func filterQuantity() []prompt.Suggest {
@@ -162,7 +167,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	}
 
 	if progress3Re.FindString(cmd) != "" {
-		return filterContains(filterQuantity(), w)
+		return filterName(filterQuantity(), w)
 	}
 
 	mg := progress2Re.FindStringSubmatch(cmd)
@@ -180,7 +185,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	}
 
 	if progress1Re.FindString(cmd) != "" {
-		return filterContains(filterQuantity(), w)
+		return filterName(filterQuantity(), w)
 	}
 
 	quantityFilterStr = ""
@@ -193,7 +198,7 @@ func interactive() {
 	defer fmt.Println("bye!")
 	opts := []prompt.Option{
 		prompt.OptionTitle("xiny interactive mode"),
-		prompt.OptionPrefix("〉"),
+		prompt.OptionPrefix(promptChar),
 		prompt.OptionMaxSuggestion(8),
 	}
 	p := prompt.New(

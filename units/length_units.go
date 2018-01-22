@@ -4,7 +4,7 @@ var (
 	Length = NewQuantity("length")
 
 	// metric
-	Meter      = Length.NewUnit("meter", "m", UnitOptionAliases("metre"))
+	Meter      = Length.NewUnit("meter", "m", SI, UnitOptionAliases("metre"))
 	ExaMeter   = exa.makeUnit(Length, Meter)
 	PetaMeter  = peta.makeUnit(Length, Meter)
 	TeraMeter  = tera.makeUnit(Length, Meter)
