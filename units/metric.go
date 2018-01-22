@@ -53,21 +53,29 @@ type Magnitude struct {
 }
 
 // Create magnitude unit and conversion given a base unit
-func (mag Magnitude) makeUnit(q *Quantity, baseUnit Unit) Unit {
-	name := fmt.Sprintf("%s%s", mag.Prefix, baseUnit.Name)
-	symbol := fmt.Sprintf("%s%s", mag.Symbol, baseUnit.Symbol)
+func (mag Magnitude) makeUnit(q *Quantity, base Unit, addOpts ...UnitOption) Unit {
+	name := fmt.Sprintf("%s%s", mag.Prefix, base.Name)
+	symbol := fmt.Sprintf("%s%s", mag.Symbol, base.Symbol)
 
+	// set system to metric by default
 	opts := []UnitOption{SI}
-	for _, alias := range baseUnit.aliases {
+
+	// create prefixed aliases if needed
+	for _, alias := range base.aliases {
 		magAlias := fmt.Sprintf("%s%s", mag.Prefix, alias)
 		opts = append(opts, UnitOptionAliases(magAlias))
+	}
+
+	// append any supplmental options
+	for _, opt := range addOpts {
+		opts = append(opts, opt)
 	}
 
 	u := q.NewUnit(name, symbol, opts...)
 
 	// only create conversions to and from base unit
 	ratio := 1.0 * math.Pow(10.0, mag.Power)
-	q.NewRatioConv(u, baseUnit, ratio)
+	q.NewRatioConv(u, base, ratio)
 
 	return u
 }
@@ -86,14 +94,14 @@ func GetMagnitude(name string) (Magnitude, error) {
 }
 
 // Create individual units and conversions for all metric magnitudes, given a base unit
-func MakeMagnitudeUnits(q *Quantity, baseUnit Unit) {
+func MakeMagnitudeUnits(q *Quantity, base Unit) {
 	for _, mag := range magnitudes {
-		name := fmt.Sprintf("%s%s", mag.Prefix, baseUnit.Name)
-		symbol := fmt.Sprintf("%s%s", mag.Symbol, baseUnit.Symbol)
+		name := fmt.Sprintf("%s%s", mag.Prefix, base.Name)
+		symbol := fmt.Sprintf("%s%s", mag.Symbol, base.Symbol)
 		u := q.NewUnit(name, symbol)
 
 		// only create conversions to and from base unit
 		ratio := 1.0 * math.Pow(10.0, mag.Power)
-		q.NewRatioConv(u, baseUnit, ratio)
+		q.NewRatioConv(u, base, ratio)
 	}
 }
