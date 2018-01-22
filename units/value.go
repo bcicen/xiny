@@ -49,8 +49,8 @@ func (v Value) Fmt(opts FmtOptions) string {
 	} else {
 		label = v.Unit.Name
 		// make label plural if needed
-		if v.Unit.plural && v.Val > 1.0 {
-			label = fmt.Sprintf("%ss", label)
+		if v.Val > 1.0 {
+			label = v.Unit.PluralName()
 		}
 	}
 

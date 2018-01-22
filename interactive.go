@@ -64,10 +64,7 @@ func buildSuggest(includeSymbols bool) (a UnitSuggests) {
 
 	for _, u := range units.UnitMap {
 		desc := unitDesc(u, descWidth)
-		name := u.Name
-		if u.Plural() {
-			name += "s"
-		}
+		name := u.PluralName()
 
 		x := UnitSuggest{
 			Suggest:  prompt.Suggest{Text: name, Description: desc},
@@ -185,6 +182,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	}
 
 	if progress1Re.FindString(cmd) != "" {
+		quantityFilterStr = ""
 		return filterName(filterQuantity(), w)
 	}
 

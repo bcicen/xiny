@@ -17,7 +17,7 @@ type Unit struct {
 	Name     string
 	Symbol   string
 	Quantity *Quantity
-	plural   bool
+	plural   string // either "none", "auto", or a specific plural name
 	aliases  []string
 	system   string
 }
@@ -31,7 +31,7 @@ func NewUnit(name, symbol string, q *Quantity, opts ...UnitOption) Unit {
 		Name:     name,
 		Symbol:   symbol,
 		Quantity: q,
-		plural:   true,
+		plural:   "auto",
 	}
 
 	for _, opt := range opts {
@@ -49,14 +49,26 @@ func (u Unit) Names() []string {
 	if u.Symbol != "" {
 		names = append(names, u.Symbol)
 	}
+	if u.plural != "none" && u.plural != "auto" {
+		names = append(names, u.PluralName())
+	}
 	return append(names, u.aliases...)
 }
 
 // Return the system of units this Unit belongs to, if any
 func (u Unit) System() string { return u.system }
 
-// Return whether this unit can be described with a plural suffix
-func (u Unit) Plural() bool { return u.plural }
+// Return the plural name for this unit
+func (u Unit) PluralName() string {
+	switch u.plural {
+	case "none":
+		return u.Name
+	case "auto":
+		return fmt.Sprintf("%ss", u.Name)
+	default: // custom plural name
+		return u.plural
+	}
+}
 
 // Return a Value for this Unit
 func (u Unit) MakeValue(v float64) Value { return Value{v, u} }
@@ -64,10 +76,12 @@ func (u Unit) MakeValue(v float64) Value { return Value{v, u} }
 // Option that may be passed to NewUnit
 type UnitOption func(Unit) Unit
 
-// If true, labels for this unit will be created with a plural suffix when appropriate
-func UnitOptionPlural(b bool) UnitOption {
+// Either "none", "auto", or a custom plural unit name
+// "none" - labels will use the unmodified unit name in a plural context
+// "auto" - labels for this unit will be created with a plural suffix when appropriate (default)
+func UnitOptionPlural(s string) UnitOption {
 	return func(u Unit) Unit {
-		u.plural = b
+		u.plural = s
 		return u
 	}
 }

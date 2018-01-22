@@ -23,7 +23,7 @@ var (
 	AttoMeter  = atto.makeUnit(Length, Meter)
 
 	Inch    = Length.NewUnit("inch", "in", BI)
-	Feet    = Length.NewUnit("feet", "ft", BI, UnitOptionAliases("foot"))
+	Foot    = Length.NewUnit("foot", "ft", BI, UnitOptionPlural("feet"))
 	Yard    = Length.NewUnit("yard", "yd", BI)
 	Mile    = Length.NewUnit("mile", "", BI)
 	League  = Length.NewUnit("league", "lea", BI)
@@ -32,7 +32,7 @@ var (
 
 func init() {
 	Length.NewRatioConv(Inch, Meter, 0.0254)
-	Length.NewRatioConv(Feet, Meter, 0.3048)
+	Length.NewRatioConv(Foot, Meter, 0.3048)
 	Length.NewRatioConv(Yard, Meter, 0.9144)
 	Length.NewRatioConv(Mile, Meter, 1609.344)
 	Length.NewRatioConv(League, Meter, 4828.032)
