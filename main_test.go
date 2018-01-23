@@ -7,6 +7,16 @@ import (
 	"github.com/bcicen/xiny/units"
 )
 
+// aggregate all unit names, aliases, etc
+func aggrNames() (a []string) {
+	for _, u := range units.UnitMap {
+		for _, name := range u.Names() {
+			a = append(a, name)
+		}
+	}
+	return a
+}
+
 func TestParseCmd(t *testing.T) {
 	cmds := []string{
 		"20kg in lbs",
@@ -37,7 +47,7 @@ func TestParseCmdFailure(t *testing.T) {
 }
 
 func TestUnitLookup(t *testing.T) {
-	for _, name := range units.Names() {
+	for _, name := range aggrNames() {
 		u, err := units.Find(name)
 		if err != nil {
 			t.Errorf(err.Error())

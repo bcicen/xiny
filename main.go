@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/bcicen/xiny/log"
@@ -55,7 +56,16 @@ func usage() {
 }
 
 func listUnits() {
-	fmt.Println(strings.Join(units.Names(), "\n"))
+	var a []string
+	for name, u := range units.UnitMap {
+		s := name
+		if u.Symbol != "" {
+			s += fmt.Sprintf(" (%s)", u.Symbol)
+		}
+		a = append(a, s)
+	}
+	sort.Strings(a)
+	fmt.Println(strings.Join(a, "\n"))
 	os.Exit(0)
 }
 
