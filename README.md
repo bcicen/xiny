@@ -11,37 +11,47 @@ Fetch the [latest release](https://github.com/bcicen/xiny/releases) for your pla
 #### Linux
 
 ```bash
-sudo wget https://github.com/bcicen/xiny/releases/download/v0.1/xiny-0.1-linux-amd64 -O /usr/local/bin/xiny
+sudo wget https://github.com/bcicen/xiny/releases/download/v0.2/xiny-0.2-linux-amd64 -O /usr/local/bin/xiny
 sudo chmod +x /usr/local/bin/xiny
 ```
 
 #### OS X
 
 ```bash
-sudo curl -Lo /usr/local/bin/xiny https://github.com/bcicen/xiny/releases/download/v0.1/xiny-0.1-darwin-amd64
+sudo curl -Lo /usr/local/bin/xiny https://github.com/bcicen/xiny/releases/download/v0.2/xiny-0.2-darwin-amd64
 sudo chmod +x /usr/local/bin/xiny
+```
+
+#### Docker
+
+```bash
+docker run --rm -ti \
+  --name=xiny \
+  quay.io/vektorlab/xiny:latest -i
 ```
 
 ## Usage
 
 Conversions may be passed in long form:
-```bash
-xiny 20 kilograms in pounds
+```
+$ xiny 20 kilograms in pounds
+44.092452 pounds
 ```
 
 or shortened form with symbols:
 ```bash
-xiny 20kg in lb
+$ xiny 20kg in lb
+44.092452 pounds
 ```
 
 Use the verbose flag(`-v`) to print the formula used for the conversion:
-```bash
-# xiny -v 32C in F
+```
+$ xiny -v 32C in F
 celsius -> farenheit: (x * 1.8 + 32)
 89.6 farenheit
 ```
 
-## Interactive mode
+### Interactive mode
 
 Use the `-i` flag to start `xiny` in an interactive, prompt-like mode with autocomplete and other useful features
 
