@@ -28,6 +28,8 @@ var (
 		prompt.OptionDescriptionBGColor(prompt.DefaultColor),
 		prompt.OptionSelectedDescriptionTextColor(prompt.LightGray),
 		prompt.OptionSelectedDescriptionBGColor(prompt.DefaultColor),
+		prompt.OptionScrollbarBGColor(prompt.DefaultColor),
+		prompt.OptionScrollbarThumbColor(prompt.DefaultColor),
 	}
 
 	promptChar        = "〉"
