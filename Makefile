@@ -16,6 +16,9 @@ build-all:
 	GOOS=linux  GOARCH=amd64 go build -tags release -ldflags $(LD_FLAGS) -o _build/$(NAME)-$(VERSION)-linux-amd64
 	cd _build; sha256sum * > sha256sums.txt
 
+image:
+	docker build -t xiny -f Dockerfile .
+
 release:
 	mkdir release
 	go get github.com/progrium/gh-release/...

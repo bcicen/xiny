@@ -39,7 +39,7 @@ $ xiny 20 kilograms in pounds
 ```
 
 or shortened form with symbols:
-```bash
+```
 $ xiny 20kg in lb
 44.092452 pounds
 ```
