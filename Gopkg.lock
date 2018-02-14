@@ -16,14 +16,14 @@
 [[projects]]
   name = "github.com/c-bata/go-prompt"
   packages = ["."]
-  revision = "c292a2f4b4fe8563883871456e19028ff9df0f26"
-  version = "v0.1.1"
+  revision = "e99fbc797b795e0a7a94affc8d44f6a0350d85f0"
+  version = "v0.2.1"
 
 [[projects]]
   name = "github.com/fatih/color"
   packages = ["."]
-  revision = "570b54cabe6b8eb0bc2dfce68d964677d63b5260"
-  version = "v1.5.0"
+  revision = "507f6050b8568533fb3f5504de8e5205fa62a114"
+  version = "v1.6.0"
 
 [[projects]]
   name = "github.com/mattn/go-colorable"
@@ -39,6 +39,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/mattn/go-tty"
+  packages = ["."]
+  revision = "5128a79c1473f8efe218f7a0e992e2c43ffa0bab"
+
+[[projects]]
+  branch = "master"
   name = "github.com/pkg/term"
   packages = ["termios"]
   revision = "b1f72af2d63057363398bec5873d16a98b453312"
@@ -47,11 +53,11 @@
   branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
-  revision = "03467258950d845cd1877eab69461b98e8c09219"
+  revision = "37707fdb30a5b38865cfb95e5aab41707daec7fd"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "6da99f4e50c7f3a6fee9430a7b36201ffc21ac74425d798d1a38ca41a4ce030b"
+  inputs-digest = "9b2b26bb0e51ef9e699b0fe5c65fc33e5af00f526c621df8280339b296d20c12"
   solver-name = "gps-cdcl"
   solver-version = 1
