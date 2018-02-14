@@ -32,7 +32,7 @@ var (
 		prompt.OptionScrollbarThumbColor(prompt.DefaultColor),
 	}
 
-	promptChar        = "〉"
+	promptChar        = "> "
 	quantityFilterStr string
 	unitSuggestions   = buildSuggest(false)
 	emptySuggestions  = []prompt.Suggest{}
