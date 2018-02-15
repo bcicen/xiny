@@ -8,8 +8,9 @@ import (
 )
 
 var (
-	cmdRe = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+(.+)")
-	optRe = regexp.MustCompile("-([a-z]+)")
+	cmdRe   = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+(.+)")
+	optRe   = regexp.MustCompile("-([a-z]+)")
+	stripRe = regexp.MustCompile(",")
 )
 
 type convertCmd struct {
@@ -25,6 +26,7 @@ func (c convertCmd) String() string {
 func parseCmd(s string) (convertCmd, error) {
 	var c convertCmd
 
+	s = stripRe.ReplaceAllString(s, "")
 	mg := cmdRe.FindStringSubmatch(s)
 	if len(mg) != 4 {
 		return c, fmt.Errorf("incomplete command")
