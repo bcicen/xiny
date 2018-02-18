@@ -12,6 +12,7 @@ import (
 
 var (
 	version  = "dev-build"
+	build    = "unknown"
 	usageStr = []string{
 		"usage: xiny [options] [input]\n",
 		"e.g xiny 20kg in lbs\n",
@@ -24,6 +25,7 @@ var opts = []Opt{
 	{"v", "enable verbose output", func() { log.Level = log.INFO }},
 	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
 	{"list", "list all potential unit names and exit", listUnits},
+	{"version", "print version info and exit", printVersion},
 }
 
 type Opt struct {
@@ -48,10 +50,20 @@ func handleOpt(s string) {
 func usage() {
 	var optUsage []string
 	for _, opt := range opts {
-		optUsage = append(optUsage, fmt.Sprintf(" -%s	%s", opt.name, opt.desc))
+		spacing := "	"
+		if len(opt.name) <= 5 {
+			spacing = "		"
+		}
+		line := fmt.Sprintf(" -%s%s%s", opt.name, spacing, opt.desc)
+		optUsage = append(optUsage, line)
 	}
 
 	fmt.Println(strings.Join(append(usageStr, optUsage...), "\n"))
+	os.Exit(0)
+}
+
+func printVersion() {
+	fmt.Printf("xiny version %s, build %s\n", version, build)
 	os.Exit(0)
 }
 
@@ -131,7 +143,7 @@ func doConvert(cmd string) string {
 func main() {
 	defer recovery(true)
 
-	if len(os.Args) == 1 {
+	if len(os.Args) <= 1 {
 		usage()
 	}
 
