@@ -15,3 +15,4 @@ FROM scratch
 COPY --from=0 /go/bin/xiny /xiny
 
 ENTRYPOINT ["/xiny"]
+CMD ["-i"]

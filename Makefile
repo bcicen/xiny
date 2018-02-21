@@ -1,7 +1,7 @@
 NAME=xiny
 VERSION=$(shell cat VERSION)
-BUILD=$(VERSION)-$(shell git rev-parse --short HEAD)
-LD_FLAGS="-w -X main.version=$(BUILD)"
+BUILD=$(shell git rev-parse --short HEAD)
+LD_FLAGS="-w -X main.version=$(VERSION) -X main.build=$(BUILD)"
 
 clean:
 	rm -rf _build/ release/
@@ -9,6 +9,9 @@ clean:
 build:
 	dep ensure
 	CGO_ENABLED=0 go build -tags release -ldflags $(LD_FLAGS) -o $(NAME)
+
+build-dev:
+	CGO_ENABLED=0 go build -ldflags "-w -X main.version=dev-build -X main.build=$(BUILD)" -o $(NAME)
 
 build-all:
 	mkdir -p _build

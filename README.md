@@ -26,8 +26,8 @@ sudo chmod +x /usr/local/bin/xiny
 
 ```bash
 docker run --rm -ti \
-  --name=xiny \
-  quay.io/vektorlab/xiny:latest -i
+           --name=xiny \
+           quay.io/vektorlab/xiny:latest -i
 ```
 
 ## Usage
