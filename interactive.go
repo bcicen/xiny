@@ -198,7 +198,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 }
 
 func interactive() {
-	fmt.Printf("xiny version %s\n", version)
+	fmt.Printf("xiny v%s\n", version)
 	fmt.Println("use `exit` or `ctrl-d` to exit")
 	defer fmt.Println("bye!")
 	opts := []prompt.Option{

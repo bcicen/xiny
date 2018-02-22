@@ -18,6 +18,7 @@ var (
 		"e.g xiny 20kg in lbs\n",
 		"options",
 	}
+	versionStr = fmt.Sprintf("xiny version %s, build %s\n", version, build)
 )
 
 var opts = []Opt{
@@ -25,7 +26,7 @@ var opts = []Opt{
 	{"v", "enable verbose output", func() { log.Level = log.INFO }},
 	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
 	{"list", "list all potential unit names and exit", listUnits},
-	{"version", "print version info and exit", printVersion},
+	{"version", "print version info and exit", func() { fmt.Println(versionStr); os.Exit(0) }},
 }
 
 type Opt struct {
@@ -59,11 +60,6 @@ func usage() {
 	}
 
 	fmt.Println(strings.Join(append(usageStr, optUsage...), "\n"))
-	os.Exit(0)
-}
-
-func printVersion() {
-	fmt.Printf("xiny version %s, build %s\n", version, build)
 	os.Exit(0)
 }
 
