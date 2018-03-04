@@ -18,7 +18,7 @@ var (
 		"e.g xiny 20kg in lbs\n",
 		"options",
 	}
-	versionStr = fmt.Sprintf("xiny version %s, build %s\n", version, build)
+	versionStr = fmt.Sprintf("xiny version %s, build %s", version, build)
 )
 
 var opts = []Opt{
