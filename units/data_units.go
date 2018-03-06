@@ -26,14 +26,13 @@ var (
 	ZettaByte = Data.NewUnit("zettabyte", "")
 	YottaByte = Data.NewUnit("yottabyte", "")
 
-	nosys   = UnitOptionSystem("") // don't assign bits to metric system
 	Bit     = Data.NewUnit("bit", "b")
-	ExaBit  = exa.makeUnit(Data, Bit)
-	PetaBit = peta.makeUnit(Data, Bit)
-	TeraBit = tera.makeUnit(Data, Bit)
-	GigaBit = giga.makeUnit(Data, Bit)
-	MegaBit = mega.makeUnit(Data, Bit)
-	KiloBit = kilo.makeUnit(Data, Bit)
+	ExaBit  = Exa(Bit)
+	PetaBit = Peta(Bit)
+	TeraBit = Tera(Bit)
+	GigaBit = Giga(Bit)
+	MegaBit = Mega(Bit)
+	KiloBit = Kilo(Bit)
 
 	Nibble = Data.NewUnit("nibble", "")
 )
