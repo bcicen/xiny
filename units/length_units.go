@@ -22,7 +22,7 @@ var (
 	FemtoMeter = Femto(Meter)
 	AttoMeter  = Atto(Meter)
 
-	Inch    = Length.NewUnit("inch", "in", BI)
+	Inch    = Length.NewUnit("inch", "in", BI, UnitOptionPlural("inches"))
 	Foot    = Length.NewUnit("foot", "ft", BI, UnitOptionPlural("feet"))
 	Yard    = Length.NewUnit("yard", "yd", BI)
 	Mile    = Length.NewUnit("mile", "", BI)
