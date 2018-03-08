@@ -61,4 +61,3 @@ Option | Description
 -i | start xiny in interactive mode
 -v | enable verbose output
 -vv | enable debug output
--list | list all potential unit names and exit

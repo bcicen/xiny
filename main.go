@@ -25,7 +25,6 @@ var opts = []Opt{
 	{"i", "start xiny in interactive mode", func() { interactive() }},
 	{"v", "enable verbose output", func() { log.Level = log.INFO }},
 	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
-	{"list", "list all potential unit names and exit", listUnits},
 	{"version", "print version info and exit", func() { fmt.Println(versionStr); os.Exit(0) }},
 }
 
@@ -60,20 +59,6 @@ func usage() {
 	}
 
 	fmt.Println(strings.Join(append(usageStr, optUsage...), "\n"))
-	os.Exit(0)
-}
-
-func listUnits() {
-	var a []string
-	for name, u := range units.UnitMap {
-		s := name
-		if u.Symbol != "" {
-			s += fmt.Sprintf(" (%s)", u.Symbol)
-		}
-		a = append(a, s)
-	}
-	sort.Strings(a)
-	fmt.Println(strings.Join(a, "\n"))
 	os.Exit(0)
 }
 
