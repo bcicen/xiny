@@ -103,8 +103,15 @@ func doConvert(cmd string) string {
 		panic(fmt.Errorf("parse error: %s", err))
 	}
 
-	fromUnit := units.MustFind(convCmd.from)
-	toUnit := units.MustFind(convCmd.to)
+	fromUnit, err := units.Find(convCmd.from)
+	if err != nil {
+		panic(err)
+	}
+
+	toUnit, err := units.Find(convCmd.to)
+	if err != nil {
+		panic(err)
+	}
 
 	if fromUnit.Quantity != toUnit.Quantity {
 		e := fmt.Sprintf("%s -> %s", fromUnit.Quantity.Name, toUnit.Quantity.Name)
