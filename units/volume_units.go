@@ -36,13 +36,13 @@ var (
 )
 
 func init() {
-	Volume.NewRatioConv(Quart, Liter, 1.1365225)
-	Volume.NewRatioConv(Pint, Liter, 0.56826125)
-	Volume.NewRatioConv(Gallon, Liter, 4.54609)
-	Volume.NewRatioConv(FluidOunce, MilliLiter, 28.4130625)
+	NewRatioConv(Quart, Liter, 1.1365225)
+	NewRatioConv(Pint, Liter, 0.56826125)
+	NewRatioConv(Gallon, Liter, 4.54609)
+	NewRatioConv(FluidOunce, MilliLiter, 28.4130625)
 
-	Volume.NewRatioConv(FluidQuart, Liter, 0.946352946)
-	Volume.NewRatioConv(FluidPint, Liter, 0.473176473)
-	Volume.NewRatioConv(FluidGallon, Liter, 3.785411784)
-	Volume.NewRatioConv(CustomaryFluidOunce, MilliLiter, 29.5735295625)
+	NewRatioConv(FluidQuart, Liter, 0.946352946)
+	NewRatioConv(FluidPint, Liter, 0.473176473)
+	NewRatioConv(FluidGallon, Liter, 3.785411784)
+	NewRatioConv(CustomaryFluidOunce, MilliLiter, 29.5735295625)
 }

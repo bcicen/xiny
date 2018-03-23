@@ -26,7 +26,7 @@ func (v Value) Convert(to Unit) (newVal Value, err error) {
 		return v, nil
 	}
 
-	fns, err := v.Unit.Quantity.Resolve(v.Unit, to)
+	fns, err := resolveConv(v.Unit, to)
 	if err != nil {
 		return newVal, err
 	}

@@ -33,11 +33,11 @@ var (
 )
 
 func init() {
-	Mass.NewRatioConv(Grain, Gram, 0.06479891)
-	Mass.NewRatioConv(Drachm, Gram, 1.7718451953125)
-	Mass.NewRatioConv(Ounce, Gram, 28.349523125)
-	Mass.NewRatioConv(Pound, Gram, 453.59237)
-	Mass.NewRatioConv(Stone, Gram, 6350.29318)
-	Mass.NewRatioConv(Ton, Gram, 1016046.9088)
-	Mass.NewRatioConv(Slug, Gram, 14593.90294)
+	NewRatioConv(Grain, Gram, 0.06479891)
+	NewRatioConv(Drachm, Gram, 1.7718451953125)
+	NewRatioConv(Ounce, Gram, 28.349523125)
+	NewRatioConv(Pound, Gram, 453.59237)
+	NewRatioConv(Stone, Gram, 6350.29318)
+	NewRatioConv(Ton, Gram, 1016046.9088)
+	NewRatioConv(Slug, Gram, 14593.90294)
 }

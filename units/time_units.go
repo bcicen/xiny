@@ -38,17 +38,17 @@ var (
 )
 
 func init() {
-	Time.NewRatioConv(Minute, Second, 60.0)
-	Time.NewRatioConv(Hour, Second, 3600.0)
-	Time.NewRatioConv(Day, Hour, 24.0)
-	Time.NewRatioConv(Month, Day, 30.0)
-	Time.NewRatioConv(Year, Day, 365.25)
+	NewRatioConv(Minute, Second, 60.0)
+	NewRatioConv(Hour, Second, 3600.0)
+	NewRatioConv(Day, Hour, 24.0)
+	NewRatioConv(Month, Day, 30.0)
+	NewRatioConv(Year, Day, 365.25)
 
-	Time.NewRatioConv(Decade, Year, 10.0)
-	Time.NewRatioConv(Century, Year, 100.0)
-	Time.NewRatioConv(Millennium, Year, 1000.0)
+	NewRatioConv(Decade, Year, 10.0)
+	NewRatioConv(Century, Year, 100.0)
+	NewRatioConv(Millennium, Year, 1000.0)
 
-	Time.NewRatioConv(PlanckTime, Second, 5.39e-44)
-	Time.NewRatioConv(Fortnight, Day, 14)
-	Time.NewRatioConv(Score, Year, 20.0)
+	NewRatioConv(PlanckTime, Second, 5.39e-44)
+	NewRatioConv(Fortnight, Day, 14)
+	NewRatioConv(Score, Year, 20.0)
 }

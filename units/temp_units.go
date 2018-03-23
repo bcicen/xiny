@@ -9,8 +9,8 @@ var (
 )
 
 func init() {
-	Temp.NewConv(Celsius, Farenheit, "x * 1.8 + 32")
-	Temp.NewConv(Farenheit, Celsius, "(x - 32) / 1.8")
-	Temp.NewConv(Celsius, Kelvin, "x + 273.15")
-	Temp.NewConv(Kelvin, Celsius, "x - 273.15")
+	NewConversion(Celsius, Farenheit, "x * 1.8 + 32")
+	NewConversion(Farenheit, Celsius, "(x - 32) / 1.8")
+	NewConversion(Celsius, Kelvin, "x + 273.15")
+	NewConversion(Kelvin, Celsius, "x - 273.15")
 }

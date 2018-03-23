@@ -67,11 +67,11 @@ func (mag Magnitude) makeUnit(base Unit, addOpts ...UnitOption) Unit {
 		opts = append(opts, opt)
 	}
 
-	u := base.Quantity.NewUnit(name, symbol, opts...)
+	u := NewUnit(name, symbol, base.Quantity, opts...)
 
 	// only create conversions to and from base unit
 	ratio := 1.0 * math.Pow(10.0, mag.Power)
-	base.Quantity.NewRatioConv(u, base, ratio)
+	NewRatioConv(u, base, ratio)
 
 	return u
 }
@@ -94,10 +94,10 @@ func MakeMagnitudeUnits(base Unit) {
 	for _, mag := range mags {
 		name := fmt.Sprintf("%s%s", mag.Prefix, base.Name)
 		symbol := fmt.Sprintf("%s%s", mag.Symbol, base.Symbol)
-		u := base.Quantity.NewUnit(name, symbol)
+		u := NewUnit(name, symbol, base.Quantity)
 
 		// only create conversions to and from base unit
 		ratio := 1.0 * math.Pow(10.0, mag.Power)
-		base.Quantity.NewRatioConv(u, base, ratio)
+		NewRatioConv(u, base, ratio)
 	}
 }

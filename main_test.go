@@ -75,29 +75,22 @@ func TestUnitNameOverlap(t *testing.T) {
 	t.Logf("tested %d unit names, %d overlaps", total, failed)
 }
 
+// ensure all units within the same quantity resolve
+// a conversion path
 func TestPathResolve(t *testing.T) {
-	for qname, q := range units.QuantityMap {
-		units := getQuantityUnits(qname)
+	for _, q := range units.QuantityMap {
+		units := q.Units()
 		for _, u1 := range units {
+			v1 := u1.MakeValue(1.0)
 			for _, u2 := range units {
 				if u1.Name == u2.Name {
 					continue
 				}
-				_, err := q.Resolve(u1, u2)
+				_, err := v1.Convert(u2)
 				if err != nil {
 					t.Errorf("failed to resolve path: %s -> %s", u1.Name, u2.Name)
 				}
 			}
 		}
 	}
-}
-
-func getQuantityUnits(name string) (a []units.Unit) {
-	q := units.QuantityMap[name]
-	for _, u := range units.UnitMap {
-		if u.Quantity == q {
-			a = append(a, u)
-		}
-	}
-	return a
 }

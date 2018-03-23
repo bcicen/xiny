@@ -16,13 +16,13 @@ var (
 type Unit struct {
 	Name     string
 	Symbol   string
-	Quantity *Quantity
+	Quantity string
 	plural   string // either "none", "auto", or a specific plural name
 	aliases  []string
 	system   string
 }
 
-func NewUnit(name, symbol string, q *Quantity, opts ...UnitOption) Unit {
+func NewUnit(name, symbol, quantity string, opts ...UnitOption) Unit {
 	if _, ok := UnitMap[name]; ok {
 		panic(fmt.Errorf("duplicate unit name: %s", name))
 	}
@@ -30,7 +30,7 @@ func NewUnit(name, symbol string, q *Quantity, opts ...UnitOption) Unit {
 	u := Unit{
 		Name:     name,
 		Symbol:   symbol,
-		Quantity: q,
+		Quantity: quantity,
 		plural:   "auto",
 	}
 

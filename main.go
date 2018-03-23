@@ -114,7 +114,7 @@ func doConvert(cmd string) string {
 	}
 
 	if fromUnit.Quantity != toUnit.Quantity {
-		e := fmt.Sprintf("%s -> %s", fromUnit.Quantity.Name, toUnit.Quantity.Name)
+		e := fmt.Sprintf("%s -> %s", fromUnit.Quantity, toUnit.Quantity)
 		panic(fmt.Errorf("unit mismatch: cannot convert %s", e))
 	}
 

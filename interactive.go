@@ -70,7 +70,7 @@ func buildSuggest(includeSymbols bool) (a UnitSuggests) {
 
 		x := UnitSuggest{
 			Suggest:  prompt.Suggest{Text: name, Description: desc},
-			Quantity: u.Quantity.Name,
+			Quantity: u.Quantity,
 			System:   u.System(),
 		}
 		a = append(a, x)
@@ -86,7 +86,7 @@ func buildSuggest(includeSymbols bool) (a UnitSuggests) {
 }
 
 func unitDesc(u units.Unit, minWidth int) string {
-	s := u.Quantity.Name
+	s := u.Quantity
 	if u.System() != "" {
 		s += strings.Repeat(" ", minWidth-len(s))
 		s += fmt.Sprintf("[%s]", u.System())
@@ -180,7 +180,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 			fromName := strings.Trim(mg[2], " ")
 			unit, err := units.Find(fromName)
 			if err == nil {
-				quantityFilterStr = unit.Quantity.Name
+				quantityFilterStr = unit.Quantity
 			}
 		}
 		if quantityFilterStr != "" {
