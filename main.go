@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"sort"
 	"strings"
 
 	"github.com/bcicen/xiny/log"

@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	// shorthand unit systems
+	// Shorthand for pre-defined unit systems
 	BI = UnitOptionSystem("imperial")
 	SI = UnitOptionSystem("metric")
 	US = UnitOptionSystem("us")
@@ -22,6 +22,7 @@ type Unit struct {
 	system   string
 }
 
+// NewUnit registers a new Unit within the package, returning the newly created Unit
 func NewUnit(name, symbol, quantity string, opts ...UnitOption) Unit {
 	if _, ok := UnitMap[name]; ok {
 		panic(fmt.Errorf("duplicate unit name: %s", name))

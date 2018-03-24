@@ -1,7 +1,7 @@
 package units
 
 const (
-	// byte constants
+	// byte ratio constants
 	_          = iota
 	kb float64 = 1 << (10 * iota)
 	mb

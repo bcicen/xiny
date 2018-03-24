@@ -12,13 +12,13 @@ import (
 )
 
 var (
-	convs []Conversion
+	convs []conversion
 	tree  = bfstree.New()
 )
 
 type conversionFn func(float64) float64
 
-type Conversion struct {
+type conversion struct {
 	from    Unit
 	to      Unit
 	Fn      conversionFn
@@ -26,13 +26,11 @@ type Conversion struct {
 }
 
 // String representation of conversion formula
-func (c Conversion) String() string { return c.Formula }
+func (c conversion) String() string { return c.Formula }
 
 // Conversion implements bfstree.Edge interface
-func (c Conversion) To() string { return c.to.Name }
-
-// Conversion implements bfstree.Edge interface
-func (c Conversion) From() string { return c.from.Name }
+func (c conversion) To() string   { return c.to.Name }
+func (c conversion) From() string { return c.from.Name }
 
 // Register a conversion formula and the inverse, given a ratio of
 // from Unit in to Unit
@@ -42,6 +40,7 @@ func NewRatioConv(from, to Unit, ratio float64) {
 	NewConversion(to, from, fmt.Sprintf("x / %s", ratioStr))
 }
 
+// NewConversion registers a new conversion formula from one Unit to another
 func NewConversion(from, to Unit, formula string) {
 	expr, err := valuate.NewEvaluableExpression(formula)
 	if err != nil {
@@ -60,7 +59,7 @@ func NewConversion(from, to Unit, formula string) {
 		return res.(float64)
 	}
 
-	c := Conversion{from, to, fn, fmtFormula(formula)}
+	c := conversion{from, to, fn, fmtFormula(formula)}
 	convs = append(convs, c)
 	tree.AddEdge(c)
 }
@@ -105,7 +104,7 @@ func resolveConv(from, to Unit) (fns []conversionFn, err error) {
 }
 
 // find conversion function between two units
-func lookupConv(from, to string) (c Conversion, err error) {
+func lookupConv(from, to string) (c conversion, err error) {
 	for _, c := range convs {
 		if c.From() == from && c.To() == to {
 			return c, nil
