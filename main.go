@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/bcicen/go-units"
 	"github.com/bcicen/xiny/log"
-	"github.com/bcicen/xiny/units"
 )
 
 var (
@@ -117,14 +117,25 @@ func doConvert(cmd string) string {
 		panic(fmt.Errorf("unit mismatch: cannot convert %s", e))
 	}
 
-	val := fromUnit.MakeValue(convCmd.amount)
-
-	val, err = val.Convert(toUnit)
+	path, err := units.ResolveConversion(fromUnit, toUnit)
 	if err != nil {
 		panic(err)
 	}
 
-	return val.String()
+	x := convCmd.amount
+	var formula string
+	for _, conv := range path {
+		if formula != "" {
+			formula = fmt.Sprintf("(%s)", strings.Replace(conv.Formula, "x", formula, 1))
+		} else {
+			formula = fmt.Sprintf("(%s)", conv.Formula)
+		}
+		log.Debugf("%s -> %s: %s", conv.From(), conv.To(), conv.Formula)
+		x = conv.Fn(x)
+	}
+	log.Infof("%s -> %s: %s", fromUnit.Name, toUnit.Name, formula)
+
+	return units.NewValue(x, toUnit).String()
 }
 
 func main() {

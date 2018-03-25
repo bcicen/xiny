@@ -4,12 +4,12 @@ import (
 	"math"
 	"testing"
 
-	"github.com/bcicen/xiny/units"
+	"github.com/bcicen/go-units"
 )
 
 // aggregate all unit names, aliases, etc
 func aggrNames() (a []string) {
-	for _, u := range units.UnitMap {
+	for _, u := range units.All() {
 		for _, name := range u.Names() {
 			a = append(a, name)
 		}

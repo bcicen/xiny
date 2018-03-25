@@ -8,7 +8,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/bcicen/xiny/units"
+	"github.com/bcicen/go-units"
 	"github.com/c-bata/go-prompt"
 )
 
@@ -55,16 +55,18 @@ func (a UnitSuggests) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
 func (a UnitSuggests) Less(i, j int) bool { return a[i].Text < a[j].Text }
 
 func buildSuggest(includeSymbols bool) (a UnitSuggests) {
+	allUnits := units.All()
+
 	// determine max spacing width to align description field
 	var descWidth int
-	for name, _ := range units.QuantityMap {
-		if len(name) > descWidth {
-			descWidth = len(name)
+	for _, u := range allUnits {
+		if len(u.Quantity) > descWidth {
+			descWidth = len(u.Quantity)
 		}
 	}
 	descWidth++
 
-	for _, u := range units.UnitMap {
+	for _, u := range allUnits {
 		desc := unitDesc(u, descWidth)
 		name := u.PluralName()
 
