@@ -13,34 +13,22 @@ var (
 	stripRe = regexp.MustCompile(",")
 )
 
-type convertCmd struct {
-	amount float64
-	from   string
-	to     string
-}
-
-func (c convertCmd) String() string {
-	return fmt.Sprintf("%f %s in %s", c.amount, c.from, c.to)
-}
-
-func parseCmd(s string) (convertCmd, error) {
-	var c convertCmd
-
+func parseCmd(s string) (amount float64, fromStr, toStr string, err error) {
 	s = stripRe.ReplaceAllString(s, "")
 	mg := cmdRe.FindStringSubmatch(s)
 	if len(mg) != 4 {
-		return c, fmt.Errorf("incomplete command")
+		return amount, fromStr, toStr, fmt.Errorf("incomplete command")
 	}
-	c.from = mg[2]
-	c.to = mg[3]
+	fromStr = mg[2]
+	toStr = mg[3]
 
 	q, err := strconv.ParseFloat(mg[1], 6)
 	if err != nil {
-		return c, fmt.Errorf("failed to parse value: %s", mg[1])
+		return amount, fromStr, toStr, fmt.Errorf("failed to parse value: %s", mg[1])
 	}
-	c.amount = q
+	amount = q
 
-	return c, nil
+	return amount, fromStr, toStr, nil
 }
 
 // parse out and return options

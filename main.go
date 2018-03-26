@@ -97,17 +97,17 @@ func recovery(exit bool) {
 }
 
 func doConvert(cmd string) string {
-	convCmd, err := parseCmd(cmd)
+	x, fromStr, toStr, err := parseCmd(cmd)
 	if err != nil {
 		panic(fmt.Errorf("parse error: %s", err))
 	}
 
-	fromUnit, err := units.Find(convCmd.from)
+	fromUnit, err := units.Find(fromStr)
 	if err != nil {
 		panic(err)
 	}
 
-	toUnit, err := units.Find(convCmd.to)
+	toUnit, err := units.Find(toStr)
 	if err != nil {
 		panic(err)
 	}
@@ -122,7 +122,6 @@ func doConvert(cmd string) string {
 		panic(err)
 	}
 
-	x := convCmd.amount
 	var formula string
 	for _, conv := range path {
 		if formula != "" {
