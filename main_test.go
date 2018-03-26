@@ -26,21 +26,21 @@ func TestParseCmd(t *testing.T) {
 	}
 
 	for _, cmd := range cmds {
-		convCmd, err := parseCmd(cmd)
+		amount, fromStr, toStr, err := parseCmd(cmd)
 		if err != nil {
 			t.Errorf("unexpected parse error: %s", err)
 			continue
 		}
-		if math.Abs(convCmd.amount) != 20 {
-			t.Errorf("parsed unexpected value: %v", convCmd.amount)
+		if math.Abs(amount) != 20 {
+			t.Errorf("parsed unexpected value: %v", amount)
 			continue
 		}
-		t.Logf("parsed conversion: %s", convCmd)
+		t.Logf("parsed conversion: %s to %s", fromStr, toStr)
 	}
 }
 
 func TestParseCmdFailure(t *testing.T) {
-	_, err := parseCmd("20kg in")
+	amount, fromStr, toStr, err := parseCmd("20kg in")
 	if err == nil {
 		t.Errorf("missing expected parse error")
 	}
@@ -61,7 +61,7 @@ func TestUnitNameOverlap(t *testing.T) {
 	nameMap := make(map[string]units.Unit)
 
 	var total, failed int
-	for _, u := range units.UnitMap {
+	for _, u := range nameMap {
 		for _, name := range u.Names() {
 			if existing, ok := nameMap[name]; ok {
 				t.Errorf("overlap in unit names: %s, %s (%s)", u.Name, existing.Name, name)
