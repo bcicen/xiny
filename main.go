@@ -115,6 +115,11 @@ func doConvert(cmd string) string {
 		panic(err)
 	}
 
+	// allow convert to same unit
+	if fromUnit.Name == toUnit.Name {
+		return units.NewValue(x, fromUnit).Fmt(fmtOpts)
+	}
+
 	if fromUnit.Quantity != toUnit.Quantity {
 		e := fmt.Sprintf("%s -> %s", fromUnit.Quantity, toUnit.Quantity)
 		panic(fmt.Errorf("unit mismatch: cannot convert %s", e))
