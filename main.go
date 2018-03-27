@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/bcicen/go-units"
@@ -20,12 +19,12 @@ var (
 	}
 	versionStr = fmt.Sprintf("xiny version %s, build %s", version, build)
 
-	displayUnits = true // whether unit label will be displayed in output
+	fmtOpts = units.DefaultFmtOptions
 )
 
 var opts = []Opt{
 	{"i", "start xiny in interactive mode", func() { interactive() }},
-	{"n", "display only numeric output (exclude units)", func() { displayUnits = false }},
+	{"n", "display only numeric output (exclude units)", func() { fmtOpts.Label = false }},
 	{"v", "enable verbose output", func() { log.Level = log.INFO }},
 	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
 	{"version", "print version info and exit", func() { fmt.Println(versionStr); os.Exit(0) }},
@@ -138,10 +137,7 @@ func doConvert(cmd string) string {
 	}
 	log.Infof("%s -> %s: %s", fromUnit.Name, toUnit.Name, formula)
 
-	if !displayUnits {
-		return strconv.FormatFloat(x, 'f', 6, 64)
-	}
-	return units.NewValue(x, toUnit).String()
+	return units.NewValue(x, toUnit).Fmt(fmtOpts)
 }
 
 func main() {
