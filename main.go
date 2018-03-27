@@ -18,8 +18,9 @@ var (
 		"e.g xiny 20kg in lbs\n",
 		"options",
 	}
-	versionStr        = fmt.Sprintf("xiny version %s, build %s", version, build)
-	displayUnits bool = true
+	versionStr = fmt.Sprintf("xiny version %s, build %s", version, build)
+
+	displayUnits = true // whether unit label will be displayed in output
 )
 
 var opts = []Opt{
@@ -137,13 +138,10 @@ func doConvert(cmd string) string {
 	}
 	log.Infof("%s -> %s: %s", fromUnit.Name, toUnit.Name, formula)
 
-	var out string
-	if displayUnits {
-		out = units.NewValue(x, toUnit).String()
-	} else {
-		out = strconv.FormatFloat(x, 'f', 6, 64)
+	if !displayUnits {
+		return strconv.FormatFloat(x, 'f', 6, 64)
 	}
-	return out
+	return units.NewValue(x, toUnit).String()
 }
 
 func main() {
