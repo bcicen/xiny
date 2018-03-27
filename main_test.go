@@ -17,6 +17,20 @@ func aggrNames() (a []string) {
 	return a
 }
 
+// aggregate units by quantity
+func aggrByQuantity() map[string][]units.Unit {
+	m := make(map[string][]units.Unit)
+
+	for _, u := range units.All() {
+		if _, ok := m[u.Quantity]; !ok {
+			m[u.Quantity] = []units.Unit{}
+		}
+		m[u.Quantity] = append(m[u.Quantity], u)
+	}
+
+	return m
+}
+
 func TestParseCmd(t *testing.T) {
 	cmds := []string{
 		"20kg in lbs",
@@ -40,7 +54,7 @@ func TestParseCmd(t *testing.T) {
 }
 
 func TestParseCmdFailure(t *testing.T) {
-	amount, fromStr, toStr, err := parseCmd("20kg in")
+	_, _, _, err := parseCmd("20kg in")
 	if err == nil {
 		t.Errorf("missing expected parse error")
 	}
@@ -78,11 +92,11 @@ func TestUnitNameOverlap(t *testing.T) {
 // ensure all units within the same quantity resolve
 // a conversion path
 func TestPathResolve(t *testing.T) {
-	for _, q := range units.QuantityMap {
-		units := q.Units()
-		for _, u1 := range units {
-			v1 := u1.MakeValue(1.0)
-			for _, u2 := range units {
+	for qname, qunits := range aggrByQuantity() {
+		t.Logf("testing conversion paths for quantity: %s", qname)
+		for _, u1 := range qunits {
+			v1 := units.NewValue(1.0, u1)
+			for _, u2 := range qunits {
 				if u1.Name == u2.Name {
 					continue
 				}
