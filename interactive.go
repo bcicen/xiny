@@ -113,7 +113,7 @@ func Executor(s string) {
 
 func runeBeforeCursor(d prompt.Document) rune {
 	empty := ' '
-	pos := d.CursorPosition - 1
+	pos := d.DisplayCursorPosition() - 1
 
 	if pos < 0 {
 		return empty

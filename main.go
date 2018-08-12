@@ -14,20 +14,22 @@ var (
 	build    = "unknown"
 	usageStr = []string{
 		"usage: xiny [options] [input]\n",
-		"e.g xiny 20kg in lbs\n",
+		"e.g", "  xiny 20kg in lbs",
+		"  xiny 7.98 ounces in grams",
+		"  xiny 1.44MB in KB",
+		"  xiny version\n",
 		"options",
 	}
 	versionStr = fmt.Sprintf("xiny version %s, build %s", version, build)
 
-	fmtOpts = units.DefaultFmtOptions
+	fmtOpts         = units.DefaultFmtOptions
+	interactiveMode = false
 )
 
 var opts = []Opt{
-	{"i", "start xiny in interactive mode", func() { interactive() }},
+	{"i", "start xiny in interactive mode", func() { interactiveMode = true }},
 	{"n", "display only numeric output (exclude units)", func() { fmtOpts.Label = false }},
-	{"v", "enable verbose output", func() { log.Level = log.INFO }},
-	{"vv", "enable debug output", func() { log.Level = log.DEBUG }},
-	{"version", "print version info and exit", func() { fmt.Println(versionStr); os.Exit(0) }},
+	{"v", "enable more verbose output (twice for debug)", func() { log.Level += 1 }},
 }
 
 type Opt struct {
@@ -152,9 +154,19 @@ func main() {
 		usage()
 	}
 
-	cmd := strings.Join(os.Args[1:], " ")
-	for _, optName := range parseOpts(&cmd) {
+	cmd, opts := parseOpts(strings.Join(os.Args[1:], " "))
+	for _, optName := range opts {
 		handleOpt(optName)
+	}
+
+	if cmd == "version" {
+		fmt.Println(versionStr)
+		return
+	}
+
+	if interactiveMode {
+		interactive()
+		return
 	}
 
 	fmt.Println(doConvert(cmd))

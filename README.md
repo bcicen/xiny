@@ -59,5 +59,5 @@ Use the `-i` flag to start `xiny` in an interactive, prompt-like mode with autoc
 Option | Description
 --- | ---
 -i | start xiny in interactive mode
--v | enable verbose output
--vv | enable debug output
+-n | display only numeric output (exclude units)
+-v | enable more verbose output (twice for debug output)
