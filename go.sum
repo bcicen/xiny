@@ -6,6 +6,8 @@ github.com/bcicen/go-units v0.0.0-20190124145621-c8e03364c7b6 h1:l6vmQPZ9I9Yz5nv
 github.com/bcicen/go-units v0.0.0-20190124145621-c8e03364c7b6/go.mod h1:ZmyCX7XZk2GYugNPk8qmN6nr2MaNYjbwyE4aaia4gDc=
 github.com/bcicen/go-units v0.0.0-20200105142812-2f1917e3e2c3 h1:Si4auH4WmXufjOF49T0aRa6xPgNeqnT9OW+qkrdr0g8=
 github.com/bcicen/go-units v0.0.0-20200105142812-2f1917e3e2c3/go.mod h1:ZmyCX7XZk2GYugNPk8qmN6nr2MaNYjbwyE4aaia4gDc=
+github.com/bcicen/go-units v1.0.0 h1:6jOHdI5LQpFZRH6RHPK5NPQPw8rxxKTCXsTRAJRTKyA=
+github.com/bcicen/go-units v1.0.0/go.mod h1:42XqueaydVba/66lNa3/YJ/U3AF8qmpMMmLKEfz7+oc=
 github.com/c-bata/go-prompt v0.2.1 h1:HTPxmnfY4y5x3Myo7Gq4ce989jfnvZIBgdBp6y8bjYM=
 github.com/c-bata/go-prompt v0.2.1/go.mod h1:VzqtzE2ksDBcdln8G7mk2RX9QyGjH+OVqOCSiVIqS34=
 github.com/c-bata/go-prompt v0.2.2-0.20180219161504-f329ebd2409d h1:IE7ice4AhM/iDaT9BR8UQe9VgcOhXlAFiK3AWwtMNp8=
