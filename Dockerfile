@@ -1,4 +1,4 @@
-FROM quay.io/vektorcloud/go:1.13
+FROM quay.io/vektorcloud/go:1.15
 
 RUN apk add --no-cache make
 
@@ -7,12 +7,10 @@ COPY go.mod .
 RUN go mod download
 
 COPY . .
-RUN make build && \
-    mkdir -p /go/bin && \
-    mv -v xiny /go/bin/
+RUN make build
 
 FROM scratch
 ENV TERM=linux
-COPY --from=0 /go/bin/xiny /xiny
+COPY --from=0 /app/xiny /xiny
 ENTRYPOINT ["/xiny"]
 CMD ["-i"]
