@@ -1,11 +1,11 @@
 module github.com/bcicen/xiny
 
-go 1.13
+go 1.15
 
 require (
 	github.com/Knetic/govaluate v3.0.0+incompatible
 	github.com/bcicen/bfstree v0.0.0-20180121191807-11ea469698a6
-	github.com/bcicen/go-units v1.0.0
+	github.com/bcicen/go-units v1.0.1
 	github.com/c-bata/go-prompt v0.2.3-0.20180710174915-aa7dc8bfd598
 	github.com/fatih/color v1.6.0
 	github.com/mattn/go-colorable v0.0.9
