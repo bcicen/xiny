@@ -22,12 +22,10 @@ var (
 	}
 	versionStr = fmt.Sprintf("xiny version %s, build %s", version, build)
 
-	fmtOpts         = units.DefaultFmtOptions
-	interactiveMode = false
+	fmtOpts = units.DefaultFmtOptions
 )
 
 var opts = []Opt{
-	{"i", "start xiny in interactive mode", func() { interactiveMode = true }},
 	{"n", "display only numeric output (exclude units)", func() { fmtOpts.Label = false }},
 	{"v", "enable more verbose output (twice for debug)", func() { log.Level += 1 }},
 }
@@ -150,24 +148,23 @@ func doConvert(cmd string) string {
 func main() {
 	defer recovery(true)
 
-	if len(os.Args) <= 1 {
-		usage()
+	var cmd string
+	var opts []string
+
+	if len(os.Args) > 1 {
+		cmd, opts = parseOpts(strings.Join(os.Args[1:], " "))
 	}
 
-	cmd, opts := parseOpts(strings.Join(os.Args[1:], " "))
 	for _, optName := range opts {
 		handleOpt(optName)
 	}
 
-	if cmd == "version" {
-		fmt.Println(versionStr)
-		return
-	}
-
-	if interactiveMode {
+	switch cmd {
+	case "":
 		interactive()
-		return
+	case "version":
+		fmt.Println(versionStr)
+	default:
+		fmt.Println(doConvert(cmd))
 	}
-
-	fmt.Println(doConvert(cmd))
 }
