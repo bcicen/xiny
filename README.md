@@ -11,14 +11,14 @@ Fetch the [latest release](https://github.com/bcicen/xiny/releases) for your pla
 #### Linux
 
 ```bash
-sudo wget https://github.com/bcicen/xiny/releases/download/v0.3.1/xiny-0.3.1-linux-amd64 -O /usr/local/bin/xiny
+sudo wget https://github.com/bcicen/xiny/releases/download/v0.3.2/xiny-0.3.2-linux-amd64 -O /usr/local/bin/xiny
 sudo chmod +x /usr/local/bin/xiny
 ```
 
 #### OS X
 
 ```bash
-sudo curl -Lo /usr/local/bin/xiny https://github.com/bcicen/xiny/releases/download/v0.3.1/xiny-0.3.1-darwin-amd64
+sudo curl -Lo /usr/local/bin/xiny https://github.com/bcicen/xiny/releases/download/v0.3.2/xiny-0.3.2-darwin-amd64
 sudo chmod +x /usr/local/bin/xiny
 ```
 
@@ -53,11 +53,10 @@ celsius -> farenheit: (x * 1.8 + 32)
 
 ### Interactive mode
 
-Use the `-i` flag to start `xiny` in an interactive, prompt-like mode with autocomplete and other useful features
+If no positional arguments are provided, `xiny` will be started in interactive mode, providing a prompt for conversions with autocomplete and other useful features
 
 ### Options
 Option | Description
 --- | ---
--i | start xiny in interactive mode
 -n | display only numeric output (exclude units)
 -v | enable more verbose output (twice for debug output)
