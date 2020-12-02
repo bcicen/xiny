@@ -3,18 +3,20 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/signal"
 	"regexp"
 	"sort"
 	"strings"
 	"unicode"
 
+	"github.com/bcicen/color"
 	"github.com/bcicen/go-units"
 	"github.com/c-bata/go-prompt"
 )
 
 var (
 	Theme = []prompt.Option{
-		prompt.OptionPrefixTextColor(prompt.Blue),
+		prompt.OptionPrefixTextColor(prompt.Cyan),
 		prompt.OptionPrefixBackgroundColor(prompt.DefaultColor),
 		prompt.OptionInputTextColor(prompt.DefaultColor),
 		prompt.OptionInputBGColor(prompt.DefaultColor),
@@ -32,7 +34,7 @@ var (
 		prompt.OptionScrollbarThumbColor(prompt.DefaultColor),
 	}
 
-	promptChar        = "> "
+	promptChar        = " › "
 	quantityFilterStr string
 	unitSuggestions   = buildSuggest(false)
 	emptySuggestions  = []prompt.Suggest{}
@@ -40,7 +42,25 @@ var (
 	progress1Re = regexp.MustCompile("-?[0-9.]+\\s+")
 	progress2Re = regexp.MustCompile("(-?[0-9.]+)\\s*([a-zA-Z|\\s]+)\\s+")
 	progress3Re = regexp.MustCompile("(-?[0-9.]+)\\s*(.+)\\s+in\\s+")
+
+	clr1    = color.NewRGB(215, 135, 255).Sprintf
+	clr2    = color.NewRGB(180, 135, 255).Sprintf
+	clr3    = color.NewRGB(145, 135, 255).Sprintf
+	clr4    = color.NewRGB(110, 135, 255).Sprintf
+	clrGrey = color.NewRGB(115, 115, 115).Sprintf
+
+	titleStr = clr1("x") + clr2("i") + clr3("n") + clr4("y")
 )
+
+func init() {
+	ch := make(chan os.Signal)
+	go func() {
+		for x := range ch {
+			fmt.Println("GOT SIGNAL", x)
+		}
+	}()
+	signal.Notify(ch, os.Interrupt)
+}
 
 type UnitSuggest struct {
 	prompt.Suggest
@@ -196,16 +216,19 @@ func Completer(d prompt.Document) []prompt.Suggest {
 	}
 
 	quantityFilterStr = ""
+
 	return emptySuggestions
 }
 
 func interactive() {
-	fmt.Printf("xiny v%s\n", version)
-	fmt.Println("use `exit` or `ctrl-d` to exit")
+	fmt.Printf(" %s %s\n", titleStr, clrGrey("v"+version))
+	fmt.Println(clrGrey(" use `exit` or `ctrl-d` to exit"))
 	defer fmt.Println("bye!")
+
 	opts := []prompt.Option{
 		prompt.OptionTitle("xiny interactive mode"),
 		prompt.OptionPrefix(promptChar),
+		prompt.OptionPrefixTextColor(prompt.DefaultColor),
 		prompt.OptionMaxSuggestion(8),
 	}
 	p := prompt.New(

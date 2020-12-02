@@ -10,8 +10,14 @@ import (
 )
 
 var (
-	version  = "dev-build"
-	build    = "unknown"
+	version = "dev-build"
+	build   = "unknown"
+	//examples = []string{
+	//"xiny 20kg in lbs",
+	//"xiny 7.98 ounces in grams",
+	//"xiny 1.44MB in KB",
+	//"xiny version",
+	//}
 	usageStr = []string{
 		"usage: xiny [options] [input]\n",
 		"e.g", "  xiny 20kg in lbs",
