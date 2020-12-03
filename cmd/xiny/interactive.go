@@ -15,8 +15,11 @@ import (
 )
 
 var (
+	promptChar = "››› "
+
 	Theme = []prompt.Option{
-		prompt.OptionPrefixTextColor(prompt.Cyan),
+		prompt.OptionPrefix(promptChar),
+		prompt.OptionPrefixTextColor(prompt.DarkGray),
 		prompt.OptionPrefixBackgroundColor(prompt.DefaultColor),
 		prompt.OptionInputTextColor(prompt.DefaultColor),
 		prompt.OptionInputBGColor(prompt.DefaultColor),
@@ -34,7 +37,6 @@ var (
 		prompt.OptionScrollbarThumbColor(prompt.DefaultColor),
 	}
 
-	promptChar        = " › "
 	quantityFilterStr string
 	unitSuggestions   = buildSuggest(false)
 	emptySuggestions  = []prompt.Suggest{}
@@ -221,14 +223,12 @@ func Completer(d prompt.Document) []prompt.Suggest {
 }
 
 func interactive() {
-	fmt.Printf(" %s %s\n", titleStr, clrGrey("v"+version))
-	fmt.Println(clrGrey(" use `exit` or `ctrl-d` to exit"))
+	fmt.Printf(" %s %s ", titleStr, clrGrey("v"+version))
+	fmt.Println(clrGrey("(use `exit` or `ctrl-d` to exit)"))
 	defer fmt.Println("bye!")
 
 	opts := []prompt.Option{
 		prompt.OptionTitle("xiny interactive mode"),
-		prompt.OptionPrefix(promptChar),
-		prompt.OptionPrefixTextColor(prompt.DefaultColor),
 		prompt.OptionMaxSuggestion(8),
 	}
 	p := prompt.New(
