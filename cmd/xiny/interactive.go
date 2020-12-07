@@ -119,18 +119,21 @@ func unitDesc(u units.Unit, minWidth int) string {
 }
 
 func Executor(s string) {
+	s = strings.ToLower(s)
 	s = strings.TrimSpace(s)
 	s = strings.Replace(s, "  ", " ", -1)
 
-	switch s {
-	case "":
+	if s == "" {
 		return
-	case "exit":
-		os.Exit(0)
+	}
+
+	fn := doConvert
+	if cmd := getCmd(s); cmd != nil {
+		fn = cmd.Fn
 	}
 
 	defer recovery(false)
-	fmt.Println(doConvert(s))
+	fmt.Println(fn(s))
 }
 
 func runeBeforeCursor(d prompt.Document) rune {
@@ -187,18 +190,18 @@ func filterQuantity() []prompt.Suggest {
 }
 
 func Completer(d prompt.Document) []prompt.Suggest {
-	cmd := d.TextBeforeCursor()
+	txt := d.TextBeforeCursor()
 	w := d.GetWordBeforeCursor()
 
-	if cmd == "" {
+	if txt == "" {
 		return emptySuggestions
 	}
 
-	if progress3Re.FindString(cmd) != "" {
+	if progress3Re.FindString(txt) != "" {
 		return filterName(filterQuantity(), w)
 	}
 
-	mg := progress2Re.FindStringSubmatch(cmd)
+	mg := progress2Re.FindStringSubmatch(txt)
 	if mg != nil {
 		if quantityFilterStr == "" {
 			fromName := strings.Trim(mg[2], " ")
@@ -212,14 +215,14 @@ func Completer(d prompt.Document) []prompt.Suggest {
 		}
 	}
 
-	if progress1Re.FindString(cmd) != "" {
+	if progress1Re.FindString(txt) != "" {
 		quantityFilterStr = ""
 		return filterName(filterQuantity(), w)
 	}
 
 	quantityFilterStr = ""
 
-	return emptySuggestions
+	return suggestCmd(txt)
 }
 
 func interactive() {
