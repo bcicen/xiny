@@ -15,13 +15,26 @@ type Command struct {
 	CompleteFn  func(string) []prompt.Suggest
 }
 
+func (cmd *Command) name() string {
+	return strings.Join(cmd.Names, ", ")
+}
+
 var (
+	interactiveUsage = `
+[n] [from-unit] in [to-unit]
+
+conversion examples:
+  20kg in lbs
+  7.98 ounces in grams
+  1.44MB in KB
+`
+
 	cmds = []*Command{
 		{
 			Names:       []string{"help", "?"},
 			Description: "show help message",
 			Fn: func(string) string {
-				return fmt.Sprintf("help!")
+				return interactiveUsage
 			},
 		},
 		{
@@ -32,7 +45,7 @@ var (
 			},
 		},
 		{
-			Names:       []string{"exit", "quit"},
+			Names:       []string{"exit", "q"},
 			Description: "quit xiny",
 			Fn: func(string) (res string) {
 				os.Exit(0)
@@ -66,4 +79,16 @@ func suggestCmd(s string) (a []prompt.Suggest) {
 		}
 	}
 	return a
+}
+
+func init() {
+	var sb strings.Builder
+	sb.WriteString("\ncommands:\n")
+	for _, cmd := range cmds {
+		sb.WriteString("  ")
+		sb.WriteString(fmt.Sprintf("%-15s", cmd.name()))
+		sb.WriteString(cmd.Description)
+		sb.WriteString("\n")
+	}
+	interactiveUsage += sb.String()
 }
