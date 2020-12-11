@@ -222,7 +222,7 @@ func Completer(d prompt.Document) []prompt.Suggest {
 
 	quantityFilterStr = ""
 
-	return suggestCmd(txt)
+	return cmdCompleter(txt)
 }
 
 func interactive() {

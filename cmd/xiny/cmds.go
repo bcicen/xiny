@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
+	"github.com/bcicen/go-units"
 	"github.com/c-bata/go-prompt"
 )
 
@@ -13,10 +15,6 @@ type Command struct {
 	Description string
 	Fn          func(string) string
 	CompleteFn  func(string) []prompt.Suggest
-}
-
-func (cmd *Command) name() string {
-	return strings.Join(cmd.Names, ", ")
 }
 
 var (
@@ -38,6 +36,19 @@ conversion examples:
 			},
 		},
 		{
+			Names:       []string{"info"},
+			Description: "show short info and stats",
+			Fn: func(string) string {
+				var sb strings.Builder
+				sb.WriteString(versionStr)
+				sb.WriteRune('\n')
+				sb.WriteString(strconv.Itoa(len(units.All())))
+				sb.WriteString(" units")
+				sb.WriteRune('\n')
+				return sb.String()
+			},
+		},
+		{
 			Names:       []string{"version"},
 			Description: "show full version info",
 			Fn: func(string) string {
@@ -54,6 +65,35 @@ conversion examples:
 		},
 	}
 )
+
+func cmdCompleter(txt string) []prompt.Suggest {
+	parts := strings.SplitN(txt, " ", 2)
+	//if len(parts) <= 1 {
+	//return suggestCmd(txt)
+	//}
+
+	//cmd := getCmd(parts[0])
+	//if cmd != nil && cmd.CompleteFn != nil {
+	//return cmd.CompleteFn(parts[1])
+	//}
+
+	//return nil
+
+	a := []prompt.Suggest{
+		{
+			Text:        "text",
+			Description: txt,
+		},
+	}
+
+	for n, s := range parts {
+		a = append(a, prompt.Suggest{
+			Text:        fmt.Sprintf("part%d", n),
+			Description: s,
+		})
+	}
+	return a
+}
 
 func getCmd(s string) *Command {
 	for _, cmd := range cmds {
@@ -86,7 +126,8 @@ func init() {
 	sb.WriteString("\ncommands:\n")
 	for _, cmd := range cmds {
 		sb.WriteString("  ")
-		sb.WriteString(fmt.Sprintf("%-15s", cmd.name()))
+		names := strings.Join(cmd.Names, ", ")
+		sb.WriteString(fmt.Sprintf("%-15s", names))
 		sb.WriteString(cmd.Description)
 		sb.WriteString("\n")
 	}
