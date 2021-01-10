@@ -26,7 +26,7 @@ var (
 		"  xiny version\n",
 		"options",
 	}
-	versionStr = fmt.Sprintf("xiny version %s, build %s", version, build)
+	versionStr = fmt.Sprintf("xiny v%s-%s", version, build)
 
 	fmtOpts = units.DefaultFmtOptions
 )
