@@ -11,6 +11,7 @@ import (
 
 	"github.com/bcicen/color"
 	"github.com/bcicen/go-units"
+	"github.com/bcicen/xiny/internal/command"
 	"github.com/c-bata/go-prompt"
 )
 
@@ -128,7 +129,7 @@ func Executor(s string) {
 	}
 
 	fn := doConvert
-	if cmd := getCmd(s); cmd != nil {
+	if cmd := command.Get(s); cmd != nil {
 		fn = cmd.Fn
 	}
 
