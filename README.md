@@ -11,14 +11,14 @@ Fetch the [latest release](https://github.com/bcicen/xiny/releases) for your pla
 #### Linux
 
 ```bash
-sudo wget https://github.com/bcicen/xiny/releases/download/v0.3.2/xiny-0.3.2-linux-amd64 -O /usr/local/bin/xiny
+sudo wget https://github.com/bcicen/xiny/releases/download/v0.3.3/xiny-0.3.3-linux-amd64 -O /usr/local/bin/xiny
 sudo chmod +x /usr/local/bin/xiny
 ```
 
 #### OS X
 
 ```bash
-sudo curl -Lo /usr/local/bin/xiny https://github.com/bcicen/xiny/releases/download/v0.3.2/xiny-0.3.2-darwin-amd64
+sudo curl -Lo /usr/local/bin/xiny https://github.com/bcicen/xiny/releases/download/v0.3.3/xiny-0.3.3-darwin-amd64
 sudo chmod +x /usr/local/bin/xiny
 ```
 
