@@ -13,4 +13,3 @@ FROM scratch
 ENV TERM=linux
 COPY --from=0 /app/xiny /xiny
 ENTRYPOINT ["/xiny"]
-CMD ["-i"]
