@@ -31,16 +31,21 @@ func parseCmd(s string) (amount float64, fromStr, toStr string, err error) {
 	return amount, fromStr, toStr, nil
 }
 
-// parse out options from a given string
-func parseOpts(s string) (ns string, opts []string) {
+// parse out options from a given string args
+func parseOpts(a []string) (cmd string, opts []string) {
 
-	matches := optRe.FindAllString(s, -1)
-	for _, m := range matches {
-		for _, ch := range m[1:] {
-			opts = append(opts, string(ch))
+	var n int
+	var s string
+	for n, s = range a {
+		if !optRe.MatchString(s) {
+			break
 		}
-		s = strings.Replace(s, m, "", 1)
+		opts = append(opts, strings.TrimPrefix(s, "-"))
 	}
 
-	return strings.Trim(s, " "), opts
+	if n < len(a)-1 {
+		cmd = strings.TrimSpace(strings.Join(a[n:], " "))
+	}
+
+	return
 }

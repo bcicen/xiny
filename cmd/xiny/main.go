@@ -158,7 +158,7 @@ func main() {
 	var opts []string
 
 	if len(os.Args) > 1 {
-		cmd, opts = parseOpts(strings.Join(os.Args[1:], " "))
+		cmd, opts = parseOpts(os.Args[1:])
 	}
 
 	for _, optName := range opts {
